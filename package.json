@@ -96,8 +96,7 @@
             "explorer/context": [
                 {
                     "submenu": "submenu/fiTask",
-                    "when": "!explorerResourceIsFolder",
-                    "group": "navigation"
+                    "group": "navigation@-1"
                 },
                 {
                     "command": "fiTask.deleteAllTasks",

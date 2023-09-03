@@ -44,7 +44,7 @@ export async function newBugTaskCommand(uri: Uri): Promise<void> {
                     taskDetails: taskDetails,
                     taskMap: taskMap,
                 });
-                workspaceInstance.decorationProvider.updateDecoration(taskMap);
+                workspaceInstance.decorationProvider.decorate(taskMap);
 
                 ensureFileSync(task.uri.fsPath);
                 writeFileSync(task.uri.fsPath, `# ${name}`);

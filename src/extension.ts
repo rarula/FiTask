@@ -8,7 +8,7 @@ export function activate(context: ExtensionContext): void {
     workspace.workspaceFolders?.forEach((workspaceFolder) => {
         const workspaceInstance = Workspace.getInstance(workspaceFolder);
 
-        workspaceInstance.decorationProvider.updateDecoration(workspaceInstance.getConfiguration().taskMap);
+        workspaceInstance.decorationProvider.decorate(workspaceInstance.getConfiguration().taskMap);
     });
 
     // register contexts

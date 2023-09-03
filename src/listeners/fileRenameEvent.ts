@@ -26,6 +26,6 @@ export function onDidFileRename(event: FileRenameEvent, workspaceInstance: Works
             taskDetails: taskDetails,
             taskMap: taskMap,
         });
-        workspaceInstance.decorationProvider.updateDecoration(taskMap);
+        workspaceInstance.decorationProvider.decorate(taskMap);
     });
 }

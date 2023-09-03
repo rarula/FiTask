@@ -20,7 +20,7 @@ export function deleteAllTasksCommand(uri: Uri): void {
                 taskDetails: [],
                 taskMap: {},
             });
-            workspaceInstance.decorationProvider.updateDecoration({});
+            workspaceInstance.decorationProvider.decorate({});
         } else {
             // タスクを保存するディレクトリが指定されていないため削除することができません。
             window.showErrorMessage('Cannot delete because the directory to save the task is not specified.');
