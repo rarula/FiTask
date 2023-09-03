@@ -1,0 +1,180 @@
+{
+    "name": "fi-task",
+    "displayName": "FiTask",
+    "description": "Assign and manage tasks to files",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.81.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "scripts": {
+        "vscode:prepublish": "npm run package",
+        "compile": "webpack",
+        "watch": "webpack --watch",
+        "package": "webpack --mode production --devtool hidden-source-map",
+        "compile-tests": "tsc -p . --outDir out",
+        "watch-tests": "tsc -p . -w --outDir out",
+        "pretest": "npm run compile-tests && npm run compile && npm run lint",
+        "lint": "eslint src --ext ts",
+        "test": "node ./out/test/runTest.js"
+    },
+    "dependencies": {
+        "fs-extra": "^11.1.1",
+        "markdown-to-text": "^0.1.1"
+    },
+    "devDependencies": {
+        "@types/fs-extra": "^11.0.1",
+        "@types/mocha": "^10.0.1",
+        "@types/node": "16.x",
+        "@types/vscode": "^1.81.0",
+        "@typescript-eslint/eslint-plugin": "^6.4.1",
+        "@typescript-eslint/parser": "^6.4.1",
+        "@vscode/test-electron": "^2.3.4",
+        "dprint": "^0.40.2",
+        "eslint": "^8.47.0",
+        "glob": "^10.3.3",
+        "mocha": "^10.2.0",
+        "ts-loader": "^9.4.4",
+        "typescript": "^5.1.6",
+        "webpack": "^5.88.2",
+        "webpack-cli": "^5.1.4"
+    },
+    "main": "./dist/extension.js",
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "contributes": {
+        "commands": [
+            {
+                "command": "fiTask.newTask",
+                "title": "New Task"
+            },
+            {
+                "command": "fiTask.newBugTask",
+                "title": "New Bug Task"
+            },
+            {
+                "command": "fiTask.newTemplateTask",
+                "title": "New Template Task"
+            },
+            {
+                "command": "fiTask.openTask",
+                "title": "Open Assigned Task"
+            },
+            {
+                "command": "fiTask.deleteAllTasks",
+                "title": "Delete All Tasks"
+            }
+        ],
+        "submenus": [
+            {
+                "id": "submenu/fiTask",
+                "label": "FiTask"
+            }
+        ],
+        "menus": {
+            "submenu/fiTask": [
+                {
+                    "command": "fiTask.newTask",
+                    "group": "0_newTask@1"
+                },
+                {
+                    "command": "fiTask.newBugTask",
+                    "group": "0_newTask@2"
+                },
+                {
+                    "command": "fiTask.newTemplateTask",
+                    "group": "0_newTask@3"
+                },
+                {
+                    "command": "fiTask.openTask",
+                    "group": "1_navigation@1"
+                }
+            ],
+            "explorer/context": [
+                {
+                    "submenu": "submenu/fiTask",
+                    "when": "!explorerResourceIsFolder",
+                    "group": "navigation"
+                },
+                {
+                    "command": "fiTask.deleteAllTasks",
+                    "when": "explorerResourceIsFolder && resourceFilename in fiTask.taskDirectory",
+                    "group": "fiTask@1"
+                }
+            ],
+            "commandPalette": [
+                {
+                    "command": "fiTask.newTask",
+                    "when": "false"
+                },
+                {
+                    "command": "fiTask.newBugTask",
+                    "when": "false"
+                },
+                {
+                    "command": "fiTask.newTemplateTask",
+                    "when": "false"
+                },
+                {
+                    "command": "fiTask.openTask",
+                    "when": "false"
+                },
+                {
+                    "command": "fiTask.deleteAllTasks",
+                    "when": "false"
+                }
+            ]
+        },
+        "configuration": {
+            "title": "FiTask",
+            "properties": {
+                "fiTask.taskDirectory": {
+                    "type": "string",
+                    "default": "FiTask",
+                    "description": "Name of the directory to save the tasks."
+                },
+                "fiTask.taskTemplates": {
+                    "type": "array",
+                    "default": [],
+                    "description": "Template to use when creating tasks.",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "title",
+                            "template"
+                        ],
+                        "properties": {
+                            "title": {
+                                "type": "string",
+                                "description": "Name of the task template."
+                            },
+                            "template": {
+                                "type": "array",
+                                "description": "Contents of the task template. (One item is interpreted as one line)",
+                                "items": {
+                                    "type": "string",
+                                    "description": "One item is interpreted as one line"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "colors": [
+            {
+                "id": "fiTaskDecoration.taskedResourceForeground",
+                "description": "Color for tasked resources.",
+                "defaults": {
+                    "dark": "#7da9f0",
+                    "light": "#4287f5",
+                    "highContrast": "#7da9f0",
+                    "highContrastLight": "#4287f5"
+                }
+            }
+        ]
+    }
+}
