@@ -1,8 +1,9 @@
 import { ensureFileSync, writeFileSync } from 'fs-extra';
 import { join } from 'path';
-import { Uri, window, workspace } from 'vscode';
+import { QuickPickItem, ThemeIcon, Uri, window, workspace } from 'vscode';
 
 import { Task } from '../../task';
+import { CustomTaskTemplate } from '../../types/CustomTaskTemplate';
 import { Workspace } from '../../workspace';
 
 export async function newTemplateTaskCommand(uri: Uri): Promise<void> {
@@ -12,43 +13,78 @@ export async function newTemplateTaskCommand(uri: Uri): Promise<void> {
         const taskDirectory = workspace.getConfiguration('fiTask').get<string>('taskDirectory');
 
         if (taskDirectory) {
-            const name = await window.showInputBox({
-                title: 'New Template Task Name',
-            });
+            const customTaskTemplates = workspace.getConfiguration('fiTask').get<CustomTaskTemplate[]>('customTaskTemplates');
 
-            if (name) {
-                const workspaceInstance = Workspace.getInstance(workspaceFolder);
-                const selectedPath = workspace.asRelativePath(uri, false);
+            if (customTaskTemplates && 1 <= customTaskTemplates.length) {
+                const quickPickItems: QuickPickItem[] = [];
 
-                const configuration = workspaceInstance.getConfiguration();
-                const taskIndex = configuration.taskIndex;
-                const taskDetails = configuration.taskDetails;
-                const taskMap = configuration.taskMap;
+                customTaskTemplates.forEach((customTaskTemplate) => {
+                    quickPickItems.push({
+                        label: customTaskTemplate.title,
+                        iconPath: new ThemeIcon('notebook-template'),
+                    });
+                });
 
-                if (taskMap[selectedPath]) {
-                    taskMap[selectedPath].push(taskIndex);
-                } else {
-                    taskMap[selectedPath] = [taskIndex];
+                const quickPickItem = await window.showQuickPick(quickPickItems);
+
+                if (quickPickItem) {
+                    for (const customTaskTemplate of customTaskTemplates) {
+                        if (quickPickItem.label !== customTaskTemplate.title) {
+                            continue;
+                        }
+
+                        const name = await window.showInputBox({
+                            title: 'New Template Task Name',
+                        });
+
+                        if (name) {
+                            const workspaceInstance = Workspace.getInstance(workspaceFolder);
+                            const selectedPath = workspace.asRelativePath(uri, false);
+
+                            const configuration = workspaceInstance.getConfiguration();
+                            const taskIndex = configuration.taskIndex;
+                            const taskDetails = configuration.taskDetails;
+                            const taskMap = configuration.taskMap;
+
+                            if (taskMap[selectedPath]) {
+                                taskMap[selectedPath].push(taskIndex);
+                            } else {
+                                taskMap[selectedPath] = [taskIndex];
+                            }
+
+                            const saveDirPath = join(workspaceFolder.uri.fsPath, taskDirectory);
+                            const task = new Task(name, taskIndex, saveDirPath, 'TEMPLATE');
+
+                            taskDetails.push({
+                                name: name,
+                                type: 'TEMPLATE',
+                                index: taskIndex,
+                            });
+                            workspaceInstance.updateConfiguration({
+                                taskIndex: taskIndex + 1,
+                                taskDetails: taskDetails,
+                                taskMap: taskMap,
+                            });
+                            workspaceInstance.decorationProvider.decorate(taskMap);
+
+                            let template = customTaskTemplate.template.join('\n');
+                            template = template.replaceAll('%name%', name);
+
+                            try {
+                                ensureFileSync(task.uri.fsPath);
+                                writeFileSync(task.uri.fsPath, template);
+                                task.open();
+                            } catch (error) {
+                                console.error(error);
+                            }
+                        }
+
+                        break;
+                    }
                 }
-
-                const saveDirPath = join(workspaceFolder.uri.fsPath, taskDirectory);
-                const task = new Task(name, taskIndex, saveDirPath, 'TEMPLATE');
-
-                taskDetails.push({
-                    name: name,
-                    type: 'TEMPLATE',
-                    index: taskIndex,
-                });
-                workspaceInstance.updateConfiguration({
-                    taskIndex: taskIndex + 1,
-                    taskDetails: taskDetails,
-                    taskMap: taskMap,
-                });
-                workspaceInstance.decorationProvider.decorate(taskMap);
-
-                ensureFileSync(task.uri.fsPath);
-                writeFileSync(task.uri.fsPath, `# ${name}`);
-                task.open();
+            } else {
+                // タスクのテンプレートが設定されていないため作成することができません。
+                window.showErrorMessage('Cannot create because the task template is not specified.');
             }
         } else {
             // タスクを保存するディレクトリが指定されていないため作成することができません。
