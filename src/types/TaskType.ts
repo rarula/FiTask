@@ -4,3 +4,9 @@ export type TaskType =
     | 'REFACTORING'
     | 'TESTING'
     | 'TEMPLATE';
+
+export type TemplateTaskType =
+    | 'REGULAR'
+    | 'BUG'
+    | 'REFACTORING'
+    | 'TESTING';

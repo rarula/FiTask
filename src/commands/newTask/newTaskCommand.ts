@@ -1,12 +1,13 @@
-import { ensureFileSync, readFileSync, writeFileSync } from 'fs-extra';
+import { ensureFileSync, writeFileSync } from 'fs-extra';
 import { join } from 'path';
-import { ExtensionContext, Uri, window, workspace } from 'vscode';
+import { Uri, window, workspace } from 'vscode';
 
 import { Task } from '../../task';
-import { TaskType } from '../../types/TaskType';
+import { Template } from '../../template';
+import { TemplateTaskType } from '../../types/TaskType';
 import { Workspace } from '../../workspace';
 
-export async function newTaskCommand(uri: Uri, context: ExtensionContext, taskType: TaskType): Promise<void> {
+export async function newTaskCommand(uri: Uri, taskType: TemplateTaskType): Promise<void> {
     const workspaceFolder = workspace.getWorkspaceFolder(uri);
 
     if (workspaceFolder) {
@@ -49,7 +50,7 @@ export async function newTaskCommand(uri: Uri, context: ExtensionContext, taskTy
 
                 try {
                     ensureFileSync(task.uri.fsPath);
-                    writeFileSync(task.uri.fsPath, getFileTemplate(name, taskType, context));
+                    writeFileSync(task.uri.fsPath, getFileTemplate(name, taskType));
                     task.open();
                 } catch (error) {
                     console.error(error);
@@ -65,72 +66,52 @@ export async function newTaskCommand(uri: Uri, context: ExtensionContext, taskTy
     }
 }
 
-function getInputBoxTitle(taskType: TaskType): string {
+function getInputBoxTitle(taskType: TemplateTaskType): string {
     switch (taskType) {
+        case 'REGULAR':
+            return 'New Task Name';
         case 'BUG':
             return 'New Bug Task Name';
         case 'REFACTORING':
             return 'New Refactoring Task Name';
         case 'TESTING':
             return 'New Testing Task Name';
-        default:
-            return 'New Task Name';
     }
 }
 
-function getFileTemplate(name: string, taskType: TaskType, context: ExtensionContext): string {
-    let template = '';
+function getFileTemplate(name: string, taskType: TemplateTaskType): string {
+    let template = Template.getTemplate(taskType);
 
-    try {
-        switch (taskType) {
-            case 'BUG': {
-                const settingsTemplate = workspace.getConfiguration('fiTask').get<string[]>('customBugTaskTemplate');
-
-                if (settingsTemplate && 1 <= settingsTemplate.length) {
-                    template = settingsTemplate.join('\n');
-                } else {
-                    template = readFileSync(context.asAbsolutePath('templates/bug.md'), 'utf-8');
-                }
-
-                break;
+    switch (taskType) {
+        case 'REGULAR': {
+            const settingsTemplate = workspace.getConfiguration('fiTask').get<string[]>('customTaskTemplate');
+            if (settingsTemplate && 1 <= settingsTemplate.length) {
+                template = settingsTemplate.join('\n');
             }
-            case 'REFACTORING': {
-                const settingsTemplate = workspace.getConfiguration('fiTask').get<string[]>('customRefactoringTaskTemplate');
-
-                if (settingsTemplate && 1 <= settingsTemplate.length) {
-                    template = settingsTemplate.join('\n');
-                } else {
-                    template = readFileSync(context.asAbsolutePath('templates/refactoring.md'), 'utf-8');
-                }
-
-                break;
-            }
-            case 'TESTING': {
-                const settingsTemplate = workspace.getConfiguration('fiTask').get<string[]>('customTestingTaskTemplate');
-
-                if (settingsTemplate && 1 <= settingsTemplate.length) {
-                    template = settingsTemplate.join('\n');
-                } else {
-                    template = readFileSync(context.asAbsolutePath('templates/testing.md'), 'utf-8');
-                }
-
-                break;
-            }
-            default: {
-                const settingsTemplate = workspace.getConfiguration('fiTask').get<string[]>('customTaskTemplate');
-
-                if (settingsTemplate && 1 <= settingsTemplate.length) {
-                    template = settingsTemplate.join('\n');
-                } else {
-                    template = readFileSync(context.asAbsolutePath('templates/regular.md'), 'utf-8');
-                }
-
-                break;
-            }
+            break;
         }
-    } catch (error) {
-        console.error(error);
+        case 'BUG': {
+            const settingsTemplate = workspace.getConfiguration('fiTask').get<string[]>('customBugTaskTemplate');
+            if (settingsTemplate && 1 <= settingsTemplate.length) {
+                template = settingsTemplate.join('\n');
+            }
+            break;
+        }
+        case 'REFACTORING': {
+            const settingsTemplate = workspace.getConfiguration('fiTask').get<string[]>('customRefactoringTaskTemplate');
+            if (settingsTemplate && 1 <= settingsTemplate.length) {
+                template = settingsTemplate.join('\n');
+            }
+            break;
+        }
+        case 'TESTING': {
+            const settingsTemplate = workspace.getConfiguration('fiTask').get<string[]>('customTestingTaskTemplate');
+            if (settingsTemplate && 1 <= settingsTemplate.length) {
+                template = settingsTemplate.join('\n');
+            }
+            break;
+        }
     }
 
-    return template.replace('%name%', name);
+    return template.replaceAll('%name%', name);
 }

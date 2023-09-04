@@ -2,6 +2,7 @@ import { commands, ExtensionContext, Uri, workspace } from 'vscode';
 
 import { deleteAllTasksCommand, newTaskCommand, newTemplateTaskCommand, openTaskCommand } from './commands';
 import { onDidChangeConfiguration } from './listeners/configurationChangeEvent';
+import { Template } from './template';
 import { Workspace } from './workspace';
 
 export function activate(context: ExtensionContext): void {
@@ -21,14 +22,20 @@ export function activate(context: ExtensionContext): void {
 
     // register command
     context.subscriptions.push(
-        commands.registerCommand('fiTask.newTask', (uri: Uri) => newTaskCommand(uri, context, 'REGULAR')),
-        commands.registerCommand('fiTask.newBugTask', (uri: Uri) => newTaskCommand(uri, context, 'BUG')),
-        commands.registerCommand('fiTask.newRefactoringTask', (uri: Uri) => newTaskCommand(uri, context, 'REFACTORING')),
-        commands.registerCommand('fiTask.newTestingTask', (uri: Uri) => newTaskCommand(uri, context, 'TESTING')),
+        commands.registerCommand('fiTask.newTask', (uri: Uri) => newTaskCommand(uri, 'REGULAR')),
+        commands.registerCommand('fiTask.newBugTask', (uri: Uri) => newTaskCommand(uri, 'BUG')),
+        commands.registerCommand('fiTask.newRefactoringTask', (uri: Uri) => newTaskCommand(uri, 'REFACTORING')),
+        commands.registerCommand('fiTask.newTestingTask', (uri: Uri) => newTaskCommand(uri, 'TESTING')),
         commands.registerCommand('fiTask.newTemplateTask', (uri: Uri) => newTemplateTaskCommand(uri)),
         commands.registerCommand('fiTask.openTask', (uri: Uri) => openTaskCommand(uri)),
         commands.registerCommand('fiTask.deleteAllTasks', (uri: Uri) => deleteAllTasksCommand(uri)),
     );
+
+    // read templates
+    Template.readTemplate('REGULAR', context);
+    Template.readTemplate('BUG', context);
+    Template.readTemplate('REFACTORING', context);
+    Template.readTemplate('TESTING', context);
 }
 
 export function deactivate(): void {
