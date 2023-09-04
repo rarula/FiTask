@@ -1,4 +1,3 @@
-import { ensureFileSync, writeFileSync } from 'fs-extra';
 import { join } from 'path';
 import { Uri, window, workspace } from 'vscode';
 
@@ -49,13 +48,8 @@ export async function newTaskCommand(uri: Uri, taskType: TemplateTaskType): Prom
                 });
                 workspaceInstance.decorationProvider.decorate(taskMap);
 
-                try {
-                    ensureFileSync(task.uri.fsPath);
-                    writeFileSync(task.uri.fsPath, getFileTemplate(name, taskType));
-                    task.open();
-                } catch (error) {
-                    console.error(error);
-                }
+                task.createFile(getFileTemplate(name, taskType));
+                task.open();
             }
         } else {
             // タスクを保存するディレクトリが指定されていないため作成することができません。

@@ -1,4 +1,3 @@
-import { ensureFileSync, writeFileSync } from 'fs-extra';
 import { join } from 'path';
 import { QuickPickItem, ThemeIcon, Uri, window, workspace } from 'vscode';
 
@@ -70,13 +69,8 @@ export async function newTemplateTaskCommand(uri: Uri): Promise<void> {
                             let template = customTaskTemplate.template.join('\n');
                             template = template.replaceAll('%name%', name);
 
-                            try {
-                                ensureFileSync(task.uri.fsPath);
-                                writeFileSync(task.uri.fsPath, template);
-                                task.open();
-                            } catch (error) {
-                                console.error(error);
-                            }
+                            task.createFile(template);
+                            task.open();
                         }
 
                         break;

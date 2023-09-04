@@ -1,6 +1,7 @@
 import { join } from 'path';
 import { commands, Uri, window, workspace } from 'vscode';
 
+import { ensureFileSync, existsSync, writeFileSync } from 'fs-extra';
 import { TaskDetail } from './types/Configuration';
 import { TaskType } from './types/TaskType';
 
@@ -29,6 +30,17 @@ export class Task {
         this.index = index;
         this.type = type;
         this.uri = Uri.file(taskFilePath);
+    }
+
+    public createFile(content: string): void {
+        try {
+            if (!existsSync(this.uri.fsPath)) {
+                ensureFileSync(this.uri.fsPath);
+                writeFileSync(this.uri.fsPath, content);
+            }
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     public open(): void {
