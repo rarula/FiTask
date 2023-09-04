@@ -1,6 +1,6 @@
 import { commands, ExtensionContext, Uri, workspace } from 'vscode';
 
-import { deleteAllTasksCommand, newBugTaskCommand, newTaskCommand, newTemplateTaskCommand, openTaskCommand } from './commands';
+import { deleteAllTasksCommand, newTaskCommand, newTemplateTaskCommand, openTaskCommand } from './commands';
 import { onDidChangeConfiguration } from './listeners/configurationChangeEvent';
 import { Workspace } from './workspace';
 
@@ -21,8 +21,10 @@ export function activate(context: ExtensionContext): void {
 
     // register command
     context.subscriptions.push(
-        commands.registerCommand('fiTask.newTask', (uri: Uri) => newTaskCommand(uri)),
-        commands.registerCommand('fiTask.newBugTask', (uri: Uri) => newBugTaskCommand(uri)),
+        commands.registerCommand('fiTask.newTask', (uri: Uri) => newTaskCommand(uri, context, 'REGULAR')),
+        commands.registerCommand('fiTask.newBugTask', (uri: Uri) => newTaskCommand(uri, context, 'BUG')),
+        commands.registerCommand('fiTask.newRefactoringTask', (uri: Uri) => newTaskCommand(uri, context, 'REFACTORING')),
+        commands.registerCommand('fiTask.newTestingTask', (uri: Uri) => newTaskCommand(uri, context, 'TESTING')),
         commands.registerCommand('fiTask.newTemplateTask', (uri: Uri) => newTemplateTaskCommand(uri)),
         commands.registerCommand('fiTask.openTask', (uri: Uri) => openTaskCommand(uri)),
         commands.registerCommand('fiTask.deleteAllTasks', (uri: Uri) => deleteAllTasksCommand(uri)),

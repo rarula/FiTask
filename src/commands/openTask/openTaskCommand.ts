@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { QuickPickItem, ThemeIcon, Uri, window, workspace } from 'vscode';
+import { QuickPickItem, ThemeColor, ThemeIcon, Uri, window, workspace } from 'vscode';
 
 import { Task } from '../../task';
 import { Workspace } from '../../workspace';
@@ -27,7 +27,7 @@ export async function openTaskCommand(uri: Uri): Promise<void> {
 
                     if (task) {
                         switch (task.type) {
-                            case 'NORMAL':
+                            case 'REGULAR':
                                 quickPickItems.push({
                                     label: task.name,
                                     description: '#' + task.index,
@@ -40,6 +40,22 @@ export async function openTaskCommand(uri: Uri): Promise<void> {
                                     label: task.name,
                                     description: '#' + task.index,
                                     iconPath: new ThemeIcon('bug'),
+                                });
+                                break;
+
+                            case 'REFACTORING':
+                                quickPickItems.push({
+                                    label: task.name,
+                                    description: '#' + task.index,
+                                    iconPath: new ThemeIcon('heart'),
+                                });
+                                break;
+
+                            case 'TESTING':
+                                quickPickItems.push({
+                                    label: task.name,
+                                    description: '#' + task.index,
+                                    iconPath: new ThemeIcon('microscope'),
                                 });
                                 break;
 

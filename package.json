@@ -56,6 +56,14 @@
                 "title": "New Bug Task"
             },
             {
+                "command": "fiTask.newRefactoringTask",
+                "title": "New Refactoring Task"
+            },
+            {
+                "command": "fiTask.newTestingTask",
+                "title": "New Testing Task"
+            },
+            {
                 "command": "fiTask.newTemplateTask",
                 "title": "New Template Task"
             },
@@ -85,8 +93,16 @@
                     "group": "0_newTask@2"
                 },
                 {
-                    "command": "fiTask.newTemplateTask",
+                    "command": "fiTask.newRefactoringTask",
                     "group": "0_newTask@3"
+                },
+                {
+                    "command": "fiTask.newTestingTask",
+                    "group": "0_newTask@4"
+                },
+                {
+                    "command": "fiTask.newTemplateTask",
+                    "group": "0_newTask@5"
                 },
                 {
                     "command": "fiTask.openTask",
@@ -111,6 +127,14 @@
                 },
                 {
                     "command": "fiTask.newBugTask",
+                    "when": "false"
+                },
+                {
+                    "command": "fiTask.newRefactoringTask",
+                    "when": "false"
+                },
+                {
+                    "command": "fiTask.newTestingTask",
                     "when": "false"
                 },
                 {

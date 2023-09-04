@@ -1,4 +1,6 @@
 export type TaskType =
-    | 'NORMAL'
+    | 'REGULAR'
     | 'BUG'
+    | 'REFACTORING'
+    | 'TESTING'
     | 'TEMPLATE';
