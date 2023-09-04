@@ -65,7 +65,7 @@
             },
             {
                 "command": "fiTask.newTemplateTask",
-                "title": "New Task with Templates..."
+                "title": "New Task With Templates..."
             },
             {
                 "command": "fiTask.openTask",
