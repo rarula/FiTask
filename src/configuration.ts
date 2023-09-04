@@ -1,4 +1,5 @@
 import { workspace } from 'vscode';
+
 import { CustomTaskTemplate } from './types/CustomTaskTemplate';
 
 const SECTION = 'fiTask';
