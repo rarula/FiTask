@@ -1,7 +1,7 @@
-import { join } from 'path';
-import { commands, Uri, window, workspace } from 'vscode';
-
 import { ensureFileSync, existsSync, writeFileSync } from 'fs-extra';
+import { join } from 'path';
+import { commands, Range, Uri, window } from 'vscode';
+
 import { TaskDetail } from './types/Configuration';
 import { TaskType } from './types/TaskType';
 
@@ -43,10 +43,8 @@ export class Task {
         }
     }
 
-    public open(): void {
-        workspace.openTextDocument(this.uri).then((document) => {
-            window.showTextDocument(document);
-        });
+    public open(range?: Range): void {
+        window.showTextDocument(this.uri, { selection: range });
     }
 
     public openPreview(): void {

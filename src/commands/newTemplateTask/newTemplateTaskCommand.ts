@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { QuickPickItem, ThemeIcon, Uri, window, workspace } from 'vscode';
+import { QuickPickItem, Range, ThemeIcon, Uri, window, workspace } from 'vscode';
 
 import * as config from '../../configuration';
 import { Task } from '../../task';
@@ -66,11 +66,20 @@ export async function newTemplateTaskCommand(uri: Uri): Promise<void> {
                             });
                             workspaceInstance.decorationProvider.decorate(taskMap);
 
-                            let template = customTaskTemplate.template.join('\n');
-                            template = template.replaceAll('%name%', name);
+                            let content = customTaskTemplate.template.join('\n');
+                            let range: Range | undefined;
 
-                            task.createFile(template);
-                            task.open();
+                            content.split('\n').forEach((line, index) => {
+                                const char = line.search(/{cursor}/i);
+                                if (char !== -1) {
+                                    range = new Range(index, char, index, char);
+                                }
+                            });
+                            content = content.replaceAll('{name}', name);
+                            content = content.replaceAll('{cursor}', '');
+
+                            task.createFile(content);
+                            task.open(range);
                         }
 
                         break;
@@ -78,7 +87,7 @@ export async function newTemplateTaskCommand(uri: Uri): Promise<void> {
                 }
             } else {
                 // タスクのテンプレートが設定されていないため作成することができません。
-                window.showErrorMessage('Cannot create because the task template is not specified.');
+                window.showInformationMessage('Cannot create because the task template is not specified.');
             }
         } else {
             // タスクを保存するディレクトリが指定されていないため作成することができません。

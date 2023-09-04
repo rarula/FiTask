@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { Uri, window, workspace } from 'vscode';
+import { Range, Uri, window, workspace } from 'vscode';
 
 import * as config from '../../configuration';
 import { Task } from '../../task';
@@ -48,8 +48,20 @@ export async function newTaskCommand(uri: Uri, taskType: TemplateTaskType): Prom
                 });
                 workspaceInstance.decorationProvider.decorate(taskMap);
 
-                task.createFile(getFileTemplate(name, taskType));
-                task.open();
+                let content = getFileTemplate(taskType);
+                let range: Range | undefined;
+
+                content.split('\n').forEach((line, index) => {
+                    const char = line.search(/{cursor}/i);
+                    if (char !== -1) {
+                        range = new Range(index, char, index, char);
+                    }
+                });
+                content = content.replaceAll('{name}', name);
+                content = content.replaceAll('{cursor}', '');
+
+                task.createFile(content);
+                task.open(range);
             }
         } else {
             // タスクを保存するディレクトリが指定されていないため作成することができません。
@@ -74,7 +86,7 @@ function getInputBoxTitle(taskType: TemplateTaskType): string {
     }
 }
 
-function getFileTemplate(name: string, taskType: TemplateTaskType): string {
+function getFileTemplate(taskType: TemplateTaskType): string {
     let template = Template.getTemplate(taskType);
 
     switch (taskType) {
@@ -108,5 +120,5 @@ function getFileTemplate(name: string, taskType: TemplateTaskType): string {
         }
     }
 
-    return template.replaceAll('%name%', name);
+    return template;
 }
