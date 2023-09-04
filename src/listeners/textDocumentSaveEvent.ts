@@ -1,8 +1,8 @@
 import { readFileSync } from 'fs-extra';
 import removeMarkdown from 'markdown-to-text';
+import { join } from 'path';
 import { TextDocument, workspace } from 'vscode';
 
-import { join } from 'path';
 import { Task } from '../task';
 import { Workspace } from '../workspace';
 
@@ -12,11 +12,7 @@ export function onDidSaveTextDocument(event: TextDocument, workspaceInstance: Wo
 
     if (taskDirectory) {
         const saveDirPath = join(workspaceInstance.uri.fsPath, taskDirectory);
-
-        const configuration = workspaceInstance.getConfiguration();
-        const taskIndex = configuration.taskIndex;
-        const taskDetails = configuration.taskDetails;
-        const taskMap = configuration.taskMap;
+        const taskDetails = workspaceInstance.getConfiguration().taskDetails;
 
         const fixedTaskDetails = taskDetails.map((taskDetail) => {
             const task = Task.getFromIndex(taskDetail.index, saveDirPath, taskDetails);
@@ -28,8 +24,6 @@ export function onDidSaveTextDocument(event: TextDocument, workspaceInstance: Wo
                     const file = readFileSync(event.uri.fsPath, 'utf-8');
                     const name = file.split('\n')[0];
                     taskDetail.name = removeMarkdown(name);
-
-                    return taskDetail;
                 }
             }
 
@@ -37,11 +31,7 @@ export function onDidSaveTextDocument(event: TextDocument, workspaceInstance: Wo
         });
 
         if (fixedTaskDetails) {
-            workspaceInstance.updateConfiguration({
-                taskIndex: taskIndex,
-                taskDetails: fixedTaskDetails,
-                taskMap: taskMap,
-            });
+            workspaceInstance.updateTaskDetails(fixedTaskDetails);
         }
     }
 }

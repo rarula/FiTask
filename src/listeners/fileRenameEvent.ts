@@ -7,10 +7,7 @@ export function onDidFileRename(event: FileRenameEvent, workspaceInstance: Works
         const oldRelativePath = workspace.asRelativePath(file.oldUri, false);
         const newRelativePath = workspace.asRelativePath(file.newUri, false);
 
-        const configuration = workspaceInstance.getConfiguration();
-        const taskIndex = configuration.taskIndex;
-        const taskDetails = configuration.taskDetails;
-        const taskMap = configuration.taskMap;
+        const taskMap = workspaceInstance.getConfiguration().taskMap;
 
         for (const key in taskMap) {
             if (key.startsWith(oldRelativePath)) {
@@ -21,11 +18,7 @@ export function onDidFileRename(event: FileRenameEvent, workspaceInstance: Works
             }
         }
 
-        workspaceInstance.updateConfiguration({
-            taskIndex: taskIndex,
-            taskDetails: taskDetails,
-            taskMap: taskMap,
-        });
+        workspaceInstance.updateTaskMap(taskMap);
         workspaceInstance.decorationProvider.decorate(taskMap);
     });
 }
