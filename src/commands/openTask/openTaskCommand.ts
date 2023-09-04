@@ -75,7 +75,7 @@ export async function openTaskCommand(uri: Uri): Promise<void> {
 
                 if (quickPick) {
                     for (const task of tasks) {
-                        if (quickPick.label === task.name) {
+                        if (quickPick.description === '#' + task.index) {
                             task.openPreview();
                             return;
                         }
