@@ -65,7 +65,7 @@
             },
             {
                 "command": "fiTask.newTemplateTask",
-                "title": "New Template Task"
+                "title": "New Task with Templates..."
             },
             {
                 "command": "fiTask.openTask",
@@ -159,10 +159,46 @@
                     "default": "FiTask",
                     "description": "Name of the directory to save the tasks."
                 },
-                "fiTask.taskTemplates": {
+                "fiTask.customTaskTemplate": {
                     "type": "array",
                     "default": [],
-                    "description": "Template to use when creating tasks.",
+                    "description": "Contents of the template used to create the task.",
+                    "items": {
+                        "type": "string",
+                        "description": "One item is interpreted as one line. The following variables are substituted during template creation.\n%name% - Task Name"
+                    }
+                },
+                "fiTask.customBugTaskTemplate": {
+                    "type": "array",
+                    "default": [],
+                    "description": "Contents of the template used to create the bug task.",
+                    "items": {
+                        "type": "string",
+                        "description": "One item is interpreted as one line. The following variables are substituted during template creation.\n%name% - Task Name"
+                    }
+                },
+                "fiTask.customRefactoringTaskTemplate": {
+                    "type": "array",
+                    "default": [],
+                    "description": "Contents of the template used to create the refactoring task.",
+                    "items": {
+                        "type": "string",
+                        "description": "One item is interpreted as one line. The following variables are substituted during template creation.\n%name% - Task Name"
+                    }
+                },
+                "fiTask.customTestingTaskTemplate": {
+                    "type": "array",
+                    "default": [],
+                    "description": "Contents of the template used to create the testing task.",
+                    "items": {
+                        "type": "string",
+                        "description": "One item is interpreted as one line. The following variables are substituted during template creation.\n%name% - Task Name"
+                    }
+                },
+                "fiTask.customTaskTemplates": {
+                    "type": "array",
+                    "default": [],
+                    "description": "Template to use when creating tasks using a template.",
                     "items": {
                         "type": "object",
                         "required": [
@@ -176,10 +212,10 @@
                             },
                             "template": {
                                 "type": "array",
-                                "description": "Contents of the task template. (One item is interpreted as one line)",
+                                "description": "Contents of the task template.",
                                 "items": {
                                     "type": "string",
-                                    "description": "One item is interpreted as one line"
+                                    "description": "One item is interpreted as one line. The following variables are substituted during template creation.\n%name% - Task Name"
                                 }
                             }
                         }

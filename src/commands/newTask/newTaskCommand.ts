@@ -83,18 +83,50 @@ function getFileTemplate(name: string, taskType: TaskType, context: ExtensionCon
 
     try {
         switch (taskType) {
-            case 'BUG':
-                template = readFileSync(context.asAbsolutePath('templates/bug.md'), 'utf-8');
+            case 'BUG': {
+                const settingsTemplate = workspace.getConfiguration('fiTask').get<string[]>('customBugTaskTemplate');
+
+                if (settingsTemplate && 1 <= settingsTemplate.length) {
+                    template = settingsTemplate.join('\n');
+                } else {
+                    template = readFileSync(context.asAbsolutePath('templates/bug.md'), 'utf-8');
+                }
+
                 break;
-            case 'REFACTORING':
-                template = readFileSync(context.asAbsolutePath('templates/refactoring.md'), 'utf-8');
+            }
+            case 'REFACTORING': {
+                const settingsTemplate = workspace.getConfiguration('fiTask').get<string[]>('customRefactoringTaskTemplate');
+
+                if (settingsTemplate && 1 <= settingsTemplate.length) {
+                    template = settingsTemplate.join('\n');
+                } else {
+                    template = readFileSync(context.asAbsolutePath('templates/refactoring.md'), 'utf-8');
+                }
+
                 break;
-            case 'TESTING':
-                template = readFileSync(context.asAbsolutePath('templates/testing.md'), 'utf-8');
+            }
+            case 'TESTING': {
+                const settingsTemplate = workspace.getConfiguration('fiTask').get<string[]>('customTestingTaskTemplate');
+
+                if (settingsTemplate && 1 <= settingsTemplate.length) {
+                    template = settingsTemplate.join('\n');
+                } else {
+                    template = readFileSync(context.asAbsolutePath('templates/testing.md'), 'utf-8');
+                }
+
                 break;
-            default:
-                template = readFileSync(context.asAbsolutePath('templates/regular.md'), 'utf-8');
+            }
+            default: {
+                const settingsTemplate = workspace.getConfiguration('fiTask').get<string[]>('customTaskTemplate');
+
+                if (settingsTemplate && 1 <= settingsTemplate.length) {
+                    template = settingsTemplate.join('\n');
+                } else {
+                    template = readFileSync(context.asAbsolutePath('templates/regular.md'), 'utf-8');
+                }
+
                 break;
+            }
         }
     } catch (error) {
         console.error(error);
