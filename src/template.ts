@@ -7,7 +7,7 @@ import { TemplateTaskType } from './types/TaskType';
 export class Template {
     private static templateMap: Map<TemplateTaskType, string> = new Map();
 
-    public static readTemplate(fileName: TemplateTaskType, context: ExtensionContext): void {
+    public static readFile(fileName: TemplateTaskType, context: ExtensionContext): void {
         const relativePath = join('templates', fileName + '.md');
         const absolutePath = context.asAbsolutePath(relativePath);
 

@@ -32,10 +32,10 @@ export function activate(context: ExtensionContext): void {
     );
 
     // read templates
-    Template.readTemplate('REGULAR', context);
-    Template.readTemplate('BUG', context);
-    Template.readTemplate('REFACTORING', context);
-    Template.readTemplate('TESTING', context);
+    Template.readFile('REGULAR', context);
+    Template.readFile('BUG', context);
+    Template.readFile('REFACTORING', context);
+    Template.readFile('TESTING', context);
 }
 
 export function deactivate(): void {
