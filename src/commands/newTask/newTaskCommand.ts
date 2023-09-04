@@ -2,6 +2,7 @@ import { ensureFileSync, writeFileSync } from 'fs-extra';
 import { join } from 'path';
 import { Uri, window, workspace } from 'vscode';
 
+import * as config from '../../configuration';
 import { Task } from '../../task';
 import { Template } from '../../template';
 import { TemplateTaskType } from '../../types/TaskType';
@@ -11,7 +12,7 @@ export async function newTaskCommand(uri: Uri, taskType: TemplateTaskType): Prom
     const workspaceFolder = workspace.getWorkspaceFolder(uri);
 
     if (workspaceFolder) {
-        const taskDirectory = workspace.getConfiguration('fiTask').get<string>('taskDirectory');
+        const taskDirectory = config.getTaskDirectory();
 
         if (taskDirectory) {
             const name = await window.showInputBox({
@@ -84,28 +85,28 @@ function getFileTemplate(name: string, taskType: TemplateTaskType): string {
 
     switch (taskType) {
         case 'REGULAR': {
-            const settingsTemplate = workspace.getConfiguration('fiTask').get<string[]>('customTaskTemplate');
+            const settingsTemplate = config.getCustomTaskTemplate();
             if (settingsTemplate && 1 <= settingsTemplate.length) {
                 template = settingsTemplate.join('\n');
             }
             break;
         }
         case 'BUG': {
-            const settingsTemplate = workspace.getConfiguration('fiTask').get<string[]>('customBugTaskTemplate');
+            const settingsTemplate = config.getCustomBugTaskTemplate();
             if (settingsTemplate && 1 <= settingsTemplate.length) {
                 template = settingsTemplate.join('\n');
             }
             break;
         }
         case 'REFACTORING': {
-            const settingsTemplate = workspace.getConfiguration('fiTask').get<string[]>('customRefactoringTaskTemplate');
+            const settingsTemplate = config.getCustomRefactoringTaskTemplate();
             if (settingsTemplate && 1 <= settingsTemplate.length) {
                 template = settingsTemplate.join('\n');
             }
             break;
         }
         case 'TESTING': {
-            const settingsTemplate = workspace.getConfiguration('fiTask').get<string[]>('customTestingTaskTemplate');
+            const settingsTemplate = config.getCustomTestingTaskTemplate();
             if (settingsTemplate && 1 <= settingsTemplate.length) {
                 template = settingsTemplate.join('\n');
             }

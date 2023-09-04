@@ -1,6 +1,7 @@
 import { commands, ExtensionContext, Uri, workspace } from 'vscode';
 
 import { deleteAllTasksCommand, newTaskCommand, newTemplateTaskCommand, openTaskCommand } from './commands';
+import * as config from './configuration';
 import { onDidChangeConfiguration } from './listeners/configurationChangeEvent';
 import { Template } from './template';
 import { Workspace } from './workspace';
@@ -14,7 +15,7 @@ export function activate(context: ExtensionContext): void {
 
     // register contexts
     commands.executeCommand('setContext', 'fiTask.taskDirectory', [
-        workspace.getConfiguration('fiTask').get<string>('taskDirectory'),
+        config.getTaskDirectory(),
     ]);
 
     // register events

@@ -1,6 +1,7 @@
 import { join } from 'path';
-import { QuickPickItem, ThemeColor, ThemeIcon, Uri, window, workspace } from 'vscode';
+import { QuickPickItem, ThemeIcon, Uri, window, workspace } from 'vscode';
 
+import * as config from '../../configuration';
 import { Task } from '../../task';
 import { Workspace } from '../../workspace';
 
@@ -15,7 +16,7 @@ export async function openTaskCommand(uri: Uri): Promise<void> {
         const taskMap = configuration.taskMap;
 
         if (taskMap[selectedPath]) {
-            const taskDirectory = workspace.getConfiguration('fiTask').get<string>('taskDirectory');
+            const taskDirectory = config.getTaskDirectory();
 
             if (taskDirectory) {
                 const saveDirPath = join(workspaceFolder.uri.fsPath, taskDirectory);

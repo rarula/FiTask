@@ -2,13 +2,14 @@ import { removeSync } from 'fs-extra';
 import { join } from 'path';
 import { Uri, window, workspace } from 'vscode';
 
+import * as config from '../../configuration';
 import { Workspace } from '../../workspace';
 
 export function deleteAllTasksCommand(uri: Uri): void {
     const workspaceFolder = workspace.getWorkspaceFolder(uri);
 
     if (workspaceFolder) {
-        const taskDirectory = workspace.getConfiguration('fiTask').get<string>('taskDirectory');
+        const taskDirectory = config.getTaskDirectory();
 
         if (taskDirectory) {
             const workspaceInstance = Workspace.getInstance(workspaceFolder);

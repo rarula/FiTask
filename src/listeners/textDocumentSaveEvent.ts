@@ -3,11 +3,12 @@ import removeMarkdown from 'markdown-to-text';
 import { join } from 'path';
 import { TextDocument, workspace } from 'vscode';
 
+import * as config from '../configuration';
 import { Task } from '../task';
 import { Workspace } from '../workspace';
 
 export function onDidSaveTextDocument(event: TextDocument, workspaceInstance: Workspace): void {
-    const taskDirectory = workspace.getConfiguration('fiTask').get<string>('taskDirectory');
+    const taskDirectory = config.getTaskDirectory();
     const relativePath = workspace.asRelativePath(event.uri, false);
 
     if (taskDirectory) {

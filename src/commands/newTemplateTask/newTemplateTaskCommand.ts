@@ -2,18 +2,18 @@ import { ensureFileSync, writeFileSync } from 'fs-extra';
 import { join } from 'path';
 import { QuickPickItem, ThemeIcon, Uri, window, workspace } from 'vscode';
 
+import * as config from '../../configuration';
 import { Task } from '../../task';
-import { CustomTaskTemplate } from '../../types/CustomTaskTemplate';
 import { Workspace } from '../../workspace';
 
 export async function newTemplateTaskCommand(uri: Uri): Promise<void> {
     const workspaceFolder = workspace.getWorkspaceFolder(uri);
 
     if (workspaceFolder) {
-        const taskDirectory = workspace.getConfiguration('fiTask').get<string>('taskDirectory');
+        const taskDirectory = config.getTaskDirectory();
 
         if (taskDirectory) {
-            const customTaskTemplates = workspace.getConfiguration('fiTask').get<CustomTaskTemplate[]>('customTaskTemplates');
+            const customTaskTemplates = config.getCustomTaskTemplates();
 
             if (customTaskTemplates && 1 <= customTaskTemplates.length) {
                 const quickPickItems: QuickPickItem[] = [];
