@@ -12,11 +12,11 @@ export function onDidSaveTextDocument(event: TextDocument, workspaceInstance: Wo
 
     const taskDirectory = config.getTaskDirectory();
     if (taskDirectory) {
-        const saveDirPath = join(workspaceInstance.uri.fsPath, taskDirectory);
+        const dirPath = join(workspaceInstance.uri.fsPath, taskDirectory);
         const taskDetails = workspaceInstance.getConfiguration().taskDetails;
 
         const fixedTaskDetails = taskDetails.map((taskDetail) => {
-            const task = Task.getFromIndex(taskDetail.index, saveDirPath, taskDetails);
+            const task = Task.getFromIndex(taskDetail.index, dirPath, taskDetails);
 
             if (task) {
                 if (relativePath === task.relativePath) {

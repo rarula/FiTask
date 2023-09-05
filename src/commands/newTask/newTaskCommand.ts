@@ -37,8 +37,8 @@ export async function newTaskCommand(uri: Uri, taskType: TemplateTaskType): Prom
                     };
                 }
 
-                const saveDirPath = join(workspaceFolder.uri.fsPath, taskDirectory);
-                const task = new Task(name, taskIndex, saveDirPath, taskType);
+                const dirPath = join(workspaceFolder.uri.fsPath, taskDirectory);
+                const task = new Task(name, taskIndex, dirPath, taskType);
 
                 taskDetails.push({
                     name: name,

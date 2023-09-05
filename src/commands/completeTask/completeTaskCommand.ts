@@ -22,8 +22,8 @@ export async function completeTaskCommand(uri: Uri): Promise<void> {
                 const archivedTaskDetails = configuration.archivedTaskDetails;
                 const taskMap = configuration.taskMap;
 
-                const saveDirPath = join(workspaceFolder.uri.fsPath, taskDirectory);
-                const task = Task.getFromPath(uri.fsPath, saveDirPath, taskDetails);
+                const dirPath = join(workspaceFolder.uri.fsPath, taskDirectory);
+                const task = Task.getFromPath(uri.fsPath, dirPath, taskDetails);
 
                 if (task) {
                     for (const key in taskMap) {

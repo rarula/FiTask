@@ -16,8 +16,8 @@ export async function deleteTaskCommand(uri: Uri): Promise<void> {
             const taskDetails = workspaceInstance.getConfiguration().taskDetails;
             const taskMap = workspaceInstance.getConfiguration().taskMap;
 
-            const saveDirPath = join(workspaceFolder.uri.fsPath, taskDirectory);
-            const task = Task.getFromPath(uri.fsPath, saveDirPath, taskDetails);
+            const dirPath = join(workspaceFolder.uri.fsPath, taskDirectory);
+            const task = Task.getFromPath(uri.fsPath, dirPath, taskDetails);
 
             if (task) {
                 for (const key in taskMap) {

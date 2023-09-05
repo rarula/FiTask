@@ -55,8 +55,8 @@ export async function newTemplateTaskCommand(uri: Uri): Promise<void> {
                                 };
                             }
 
-                            const saveDirPath = join(workspaceFolder.uri.fsPath, taskDirectory);
-                            const task = new Task(name, taskIndex, saveDirPath, 'TEMPLATE');
+                            const dirPath = join(workspaceFolder.uri.fsPath, taskDirectory);
+                            const task = new Task(name, taskIndex, dirPath, 'TEMPLATE');
 
                             taskDetails.push({
                                 name: name,

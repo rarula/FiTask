@@ -6,15 +6,15 @@ import { TaskDetail } from './types/Configuration';
 import { TaskType } from './types/TaskType';
 
 export class Task {
-    public static getFromPath(path: string, saveDirPath: string, taskDetails: TaskDetail[]): Task | undefined {
+    public static getFromPath(path: string, dirPath: string, taskDetails: TaskDetail[]): Task | undefined {
         const index = parseInt(basename(path, '.md'));
-        return Task.getFromIndex(index, saveDirPath, taskDetails);
+        return Task.getFromIndex(index, dirPath, taskDetails);
     }
 
-    public static getFromIndex(index: number, saveDirPath: string, taskDetails: TaskDetail[]): Task | undefined {
+    public static getFromIndex(index: number, dirPath: string, taskDetails: TaskDetail[]): Task | undefined {
         for (const taskDetail of taskDetails) {
             if (taskDetail.index === index) {
-                return new Task(taskDetail.name, index, saveDirPath, taskDetail.type);
+                return new Task(taskDetail.name, index, dirPath, taskDetail.type);
             }
         }
     }
@@ -28,10 +28,10 @@ export class Task {
     constructor(
         name: string,
         index: number,
-        saveDirPath: string,
+        dirPath: string,
         type: TaskType,
     ) {
-        const taskFilePath = join(saveDirPath, index + '.md');
+        const taskFilePath = join(dirPath, index + '.md');
         this.name = name;
         this.index = index;
         this.type = type;

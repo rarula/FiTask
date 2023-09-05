@@ -19,12 +19,12 @@ export async function openTaskCommand(uri: Uri): Promise<void> {
             const taskDirectory = config.getTaskDirectory();
 
             if (taskDirectory) {
-                const saveDirPath = join(workspaceFolder.uri.fsPath, taskDirectory);
+                const dirPath = join(workspaceFolder.uri.fsPath, taskDirectory);
                 const quickPickItems: QuickPickItem[] = [];
                 const tasks: Task[] = [];
 
                 for (const index of taskMap[selectedPath].assigned) {
-                    const task = Task.getFromIndex(index, saveDirPath, taskDetails);
+                    const task = Task.getFromIndex(index, dirPath, taskDetails);
 
                     if (task) {
                         switch (task.type) {

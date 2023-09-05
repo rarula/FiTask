@@ -13,8 +13,8 @@ export function deleteAllTasksCommand(uri: Uri): void {
 
         if (taskDirectory) {
             const workspaceInstance = Workspace.getInstance(workspaceFolder);
-            const saveDirPath = join(workspaceFolder.uri.fsPath, taskDirectory);
-            removeSync(saveDirPath);
+            const dirPath = join(workspaceFolder.uri.fsPath, taskDirectory);
+            removeSync(dirPath);
 
             workspaceInstance.updateConfiguration({
                 taskIndex: 1,
