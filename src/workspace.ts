@@ -45,15 +45,20 @@ export class Workspace {
 
     public getConfiguration(): Configuration {
         const configFilePath = join(this.uri.fsPath, CONFIG_FILE_NAME);
+        let config = DEFAULT_CONFIG;
 
-        if (existsSync(configFilePath)) {
-            const config: Configuration = readJsonSync(configFilePath);
-            return config;
-        } else {
-            this.generateConfiguration();
-            const config: Configuration = readJsonSync(configFilePath);
-            return config;
+        try {
+            if (existsSync(configFilePath)) {
+                config = readJsonSync(configFilePath);
+            } else {
+                this.generateConfiguration();
+                config = readJsonSync(configFilePath);
+            }
+        } catch (error) {
+            console.error(error);
         }
+
+        return { ...DEFAULT_CONFIG, ...config };
     }
 
     public updateTaskIndex(taskIndex: number): void {
@@ -89,20 +94,28 @@ export class Workspace {
     public updateConfiguration(configuration: Configuration): void {
         const configFilePath = join(this.uri.fsPath, CONFIG_FILE_NAME);
 
-        if (existsSync(configFilePath)) {
-            writeJsonSync(configFilePath, configuration, { spaces: 4 });
-        } else {
-            ensureFileSync(configFilePath);
-            writeJsonSync(configFilePath, configuration, { spaces: 4 });
+        try {
+            if (existsSync(configFilePath)) {
+                writeJsonSync(configFilePath, configuration, { spaces: 4 });
+            } else {
+                ensureFileSync(configFilePath);
+                writeJsonSync(configFilePath, configuration, { spaces: 4 });
+            }
+        } catch (error) {
+            console.error(error);
         }
     }
 
     public generateConfiguration(): void {
         const configFilePath = join(this.uri.fsPath, CONFIG_FILE_NAME);
 
-        if (!existsSync(configFilePath)) {
-            ensureFileSync(configFilePath);
-            writeJsonSync(configFilePath, DEFAULT_CONFIG, { spaces: 4 });
+        try {
+            if (!existsSync(configFilePath)) {
+                ensureFileSync(configFilePath);
+                writeJsonSync(configFilePath, DEFAULT_CONFIG, { spaces: 4 });
+            }
+        } catch (error) {
+            console.error(error);
         }
     }
 }
