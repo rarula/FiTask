@@ -262,10 +262,10 @@
                 "id": "fiTaskDecoration.taskedResourceForeground",
                 "description": "Color for tasked resources.",
                 "defaults": {
-                    "dark": "#7da9f0",
-                    "light": "#4287f5",
-                    "highContrast": "#7da9f0",
-                    "highContrastLight": "#4287f5"
+                    "dark": "#f0bc7d",
+                    "light": "#d77f2b",
+                    "highContrast": "#f0bc7d",
+                    "highContrastLight": "#d77f2b"
                 }
             }
         ]
