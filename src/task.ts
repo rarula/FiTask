@@ -1,14 +1,19 @@
 import { ensureFileSync, existsSync, readFileSync, removeSync, writeFileSync } from 'fs-extra';
-import { basename, join } from 'path';
+import { basename, dirname, join } from 'path';
 import { commands, Range, Uri, window, workspace } from 'vscode';
 
 import { TaskDetail } from './types/Configuration';
 import { TaskType } from './types/TaskType';
 
 export class Task {
-    public static getFromPath(path: string, dirPath: string, taskDetails: TaskDetail[]): Task | undefined {
-        const index = parseInt(basename(path, '.md'));
-        return Task.getFromIndex(index, dirPath, taskDetails);
+    public static getFromPath(path: string, dirName: string, dirPath: string, taskDetails: TaskDetail[]): Task | undefined {
+        const uri = Uri.file(dirname(path));
+        const relativePath = workspace.asRelativePath(uri, false);
+
+        if (relativePath === dirName) {
+            const index = parseInt(basename(path, '.md'));
+            return Task.getFromIndex(index, dirPath, taskDetails);
+        }
     }
 
     public static getFromIndex(index: number, dirPath: string, taskDetails: TaskDetail[]): Task | undefined {

@@ -22,10 +22,10 @@ export async function deleteTaskCommand(uri: Uri): Promise<void> {
                 const details = configuration.details;
 
                 const assignedDirPath = join(workspaceFolder.uri.fsPath, taskDirectory);
-                const assignedTask = Task.getFromPath(uri.fsPath, assignedDirPath, details.assigned);
+                const assignedTask = Task.getFromPath(uri.fsPath, taskDirectory, assignedDirPath, details.assigned);
 
                 const archivedDirPath = join(workspaceFolder.uri.fsPath, archivedTaskDirectory);
-                const archivedTask = Task.getFromPath(uri.fsPath, archivedDirPath, details.archived);
+                const archivedTask = Task.getFromPath(uri.fsPath, archivedTaskDirectory, archivedDirPath, details.archived);
 
                 if (assignedTask) {
                     for (const key in taskMap) {

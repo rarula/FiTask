@@ -22,7 +22,7 @@ export async function completeTaskCommand(uri: Uri): Promise<void> {
                 const details = configuration.details;
 
                 const dirPath = join(workspaceFolder.uri.fsPath, taskDirectory);
-                const task = Task.getFromPath(uri.fsPath, dirPath, details.assigned);
+                const task = Task.getFromPath(uri.fsPath, taskDirectory, dirPath, details.assigned);
 
                 if (task) {
                     for (const key in taskMap) {
