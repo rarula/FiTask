@@ -36,7 +36,7 @@ export class Task {
         this.index = index;
         this.type = type;
         this.uri = Uri.file(taskFilePath);
-        this.relativePath = workspace.asRelativePath(this.uri);
+        this.relativePath = workspace.asRelativePath(this.uri, false);
     }
 
     public createFile(content: string): void {
