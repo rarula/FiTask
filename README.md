@@ -1,3 +1,5 @@
+English | [日本語](README_ja.md)
+
 # FiTask
 
 VSCode extension for linking and managing files and tasks.
