@@ -11,7 +11,6 @@ export async function deleteTaskCommand(uri: Uri): Promise<void> {
     if (workspaceFolder) {
         const taskDirectory = config.getTaskDirectory();
 
-        // TODO: アーカイブ済みタスクを削除できてしまう問題を修正する
         if (taskDirectory) {
             const workspaceInstance = Workspace.getInstance(workspaceFolder);
             const taskDetails = workspaceInstance.getConfiguration().taskDetails;
