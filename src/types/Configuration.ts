@@ -2,20 +2,24 @@ import { TaskType } from './TaskType';
 
 export type Configuration = {
     taskIndex: number;
-    taskDetails: TaskDetail[];
-    archivedTaskDetails: TaskDetail[];
     taskMap: TaskMap;
+    details: TaskDetails;
+};
+
+export type TaskMap = {
+    [filePath: string]: {
+        assigned: number[];
+        archived: number[];
+    };
+};
+
+export type TaskDetails = {
+    assigned: TaskDetail[];
+    archived: TaskDetail[];
 };
 
 export type TaskDetail = {
     name: string;
     type: TaskType;
     index: number;
-};
-
-export type TaskMap = {
-    [filePath: string]: {
-        archived: number[];
-        assigned: number[];
-    };
 };

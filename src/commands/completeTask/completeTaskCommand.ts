@@ -18,34 +18,35 @@ export async function completeTaskCommand(uri: Uri): Promise<void> {
                 const workspaceInstance = Workspace.getInstance(workspaceFolder);
                 const configuration = workspaceInstance.getConfiguration();
 
-                const taskDetails = configuration.taskDetails;
-                const archivedTaskDetails = configuration.archivedTaskDetails;
                 const taskMap = configuration.taskMap;
+                const details = configuration.details;
 
                 const dirPath = join(workspaceFolder.uri.fsPath, taskDirectory);
-                const task = Task.getFromPath(uri.fsPath, dirPath, taskDetails);
+                const task = Task.getFromPath(uri.fsPath, dirPath, details.assigned);
 
                 if (task) {
                     for (const key in taskMap) {
-                        if (taskMap[key].assigned.includes(task.index)) {
-                            taskMap[key].assigned = taskMap[key].assigned.filter((index) => task.index !== index);
-                            taskMap[key].archived.push(task.index);
+                        const object = taskMap[key];
 
-                            const content = task.readFile();
-                            task.removeFile();
-                            task.close();
+                        if (object.assigned.includes(task.index)) {
+                            // archivedにindexを追加
+                            taskMap[key].archived.push(task.index);
+                            details.archived.push(...details.assigned.filter((taskDetail) => task.index === taskDetail.index));
+
+                            // assignedからindexを取り除く
+                            taskMap[key].assigned = object.assigned.filter((index) => task.index !== index);
+                            details.assigned = details.assigned.filter((taskDetail) => task.index !== taskDetail.index);
 
                             const archiveDirPath = join(workspaceFolder.uri.fsPath, archivedTaskDirectory);
                             const archivedTask = new Task(task.name, task.index, archiveDirPath, task.type);
 
-                            const fixedTaskDetails = taskDetails.filter((taskDetail) => task.index !== taskDetail.index);
-                            archivedTaskDetails.push(...taskDetails.filter((taskDetail) => task.index === taskDetail.index));
-
+                            const content = task.readFile();
+                            task.removeFile();
+                            task.close();
                             archivedTask.createFile(content);
 
-                            workspaceInstance.updateTaskDetails(fixedTaskDetails);
-                            workspaceInstance.updateArchivedTaskDetails(archivedTaskDetails);
                             workspaceInstance.updateTaskMap(taskMap);
+                            workspaceInstance.updateDetails(details);
                             workspaceInstance.decorationProvider.decorate(taskMap);
                         }
                     }

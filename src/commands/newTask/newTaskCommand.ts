@@ -20,36 +20,38 @@ export async function newTaskCommand(uri: Uri, taskType: TemplateTaskType): Prom
 
             if (name) {
                 const workspaceInstance = Workspace.getInstance(workspaceFolder);
-                const selectedPath = workspace.asRelativePath(uri, false);
-
                 const configuration = workspaceInstance.getConfiguration();
-                const taskIndex = configuration.taskIndex;
-                const taskDetails = configuration.taskDetails;
-                const archivedTaskDetails = configuration.archivedTaskDetails;
-                const taskMap = configuration.taskMap;
 
-                if (taskMap[selectedPath]) {
-                    taskMap[selectedPath].assigned.push(taskIndex);
-                } else {
-                    taskMap[selectedPath] = {
-                        archived: [],
-                        assigned: [taskIndex],
-                    };
-                }
+                const taskIndex = configuration.taskIndex;
+                const taskMap = configuration.taskMap;
+                const details = configuration.details;
 
                 const dirPath = join(workspaceFolder.uri.fsPath, taskDirectory);
                 const task = new Task(name, taskIndex, dirPath, taskType);
 
-                taskDetails.push({
-                    name: name,
-                    type: taskType,
-                    index: taskIndex,
+                const selectedPath = workspace.asRelativePath(uri, false);
+
+                if (taskMap[selectedPath]) {
+                    taskMap[selectedPath].assigned.push(task.index);
+                } else {
+                    taskMap[selectedPath] = {
+                        assigned: [task.index],
+                        archived: [],
+                    };
+                }
+
+                details.assigned.push({
+                    name: task.name,
+                    type: task.type,
+                    index: task.index,
                 });
                 workspaceInstance.updateConfiguration({
                     taskIndex: taskIndex + 1,
-                    taskDetails: taskDetails,
-                    archivedTaskDetails: archivedTaskDetails,
                     taskMap: taskMap,
+                    details: {
+                        assigned: details.assigned,
+                        archived: details.archived,
+                    },
                 });
                 workspaceInstance.decorationProvider.decorate(taskMap);
 
@@ -62,7 +64,7 @@ export async function newTaskCommand(uri: Uri, taskType: TemplateTaskType): Prom
                         range = new Range(index, char, index, char);
                     }
                 });
-                content = content.replaceAll('{name}', name);
+                content = content.replaceAll('{name}', task.name);
                 content = content.replaceAll('{cursor}', '');
 
                 task.createFile(content);

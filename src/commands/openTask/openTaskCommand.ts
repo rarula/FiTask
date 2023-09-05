@@ -9,65 +9,56 @@ export async function openTaskCommand(uri: Uri): Promise<void> {
     const workspaceFolder = workspace.getWorkspaceFolder(uri);
 
     if (workspaceFolder) {
-        const selectedPath = workspace.asRelativePath(uri, false);
         const configuration = Workspace.getInstance(workspaceFolder).getConfiguration();
 
-        const taskDetails = configuration.taskDetails;
         const taskMap = configuration.taskMap;
+        const details = configuration.details;
 
-        if (taskMap[selectedPath].assigned.length) {
+        const selectedPath = workspace.asRelativePath(uri, false);
+        const object = taskMap[selectedPath];
+
+        if (object.assigned.length) {
             const taskDirectory = config.getTaskDirectory();
 
             if (taskDirectory) {
-                const dirPath = join(workspaceFolder.uri.fsPath, taskDirectory);
                 const quickPickItems: QuickPickItem[] = [];
                 const tasks: Task[] = [];
 
-                for (const index of taskMap[selectedPath].assigned) {
-                    const task = Task.getFromIndex(index, dirPath, taskDetails);
+                const dirPath = join(workspaceFolder.uri.fsPath, taskDirectory);
+
+                for (const index of object.assigned) {
+                    const task = Task.getFromIndex(index, dirPath, details.assigned);
 
                     if (task) {
+                        let iconPath: ThemeIcon;
+
                         switch (task.type) {
                             case 'REGULAR':
-                                quickPickItems.push({
-                                    label: task.name,
-                                    description: '#' + task.index,
-                                    iconPath: new ThemeIcon('notebook'),
-                                });
+                                iconPath = new ThemeIcon('notebook');
                                 break;
 
                             case 'BUG':
-                                quickPickItems.push({
-                                    label: task.name,
-                                    description: '#' + task.index,
-                                    iconPath: new ThemeIcon('bug'),
-                                });
+                                iconPath = new ThemeIcon('bug');
                                 break;
 
                             case 'REFACTORING':
-                                quickPickItems.push({
-                                    label: task.name,
-                                    description: '#' + task.index,
-                                    iconPath: new ThemeIcon('heart'),
-                                });
+                                iconPath = new ThemeIcon('heart');
                                 break;
 
                             case 'TESTING':
-                                quickPickItems.push({
-                                    label: task.name,
-                                    description: '#' + task.index,
-                                    iconPath: new ThemeIcon('microscope'),
-                                });
+                                iconPath = new ThemeIcon('microscope');
                                 break;
 
                             case 'TEMPLATE':
-                                quickPickItems.push({
-                                    label: task.name,
-                                    description: '#' + task.index,
-                                    iconPath: new ThemeIcon('notebook-template'),
-                                });
+                                iconPath = new ThemeIcon('notebook-template');
                                 break;
                         }
+
+                        quickPickItems.push({
+                            label: task.name,
+                            description: '#' + task.index,
+                            iconPath: iconPath,
+                        });
                         tasks.push(task);
                     }
                 }

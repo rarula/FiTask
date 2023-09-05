@@ -18,9 +18,11 @@ export function deleteAllTasksCommand(uri: Uri): void {
 
             workspaceInstance.updateConfiguration({
                 taskIndex: 1,
-                taskDetails: [],
-                archivedTaskDetails: [],
                 taskMap: {},
+                details: {
+                    assigned: [],
+                    archived: [],
+                },
             });
             workspaceInstance.decorationProvider.decorate({});
         } else {

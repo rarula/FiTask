@@ -5,15 +5,17 @@ import { Uri, window, workspace, WorkspaceFolder } from 'vscode';
 import { TaskDecorationProvider } from './decorationProvider';
 import { onDidFileRename } from './listeners/fileRenameEvent';
 import { onDidSaveTextDocument } from './listeners/textDocumentSaveEvent';
-import { Configuration, TaskDetail, TaskMap } from './types/Configuration';
+import { Configuration, TaskDetails, TaskMap } from './types/Configuration';
 
 const CONFIG_FILE_NAME = 'fitask.config.json';
 
 const DEFAULT_CONFIG: Configuration = {
     taskIndex: 1,
-    taskDetails: [],
-    archivedTaskDetails: [],
     taskMap: {},
+    details: {
+        assigned: [],
+        archived: [],
+    },
 };
 
 export class Workspace {
@@ -54,36 +56,13 @@ export class Workspace {
         }
     }
 
-    public updateTaskIndex(index: number): void {
+    public updateTaskIndex(taskIndex: number): void {
         const configuration = this.getConfiguration();
 
         this.updateConfiguration({
-            taskIndex: index,
-            taskDetails: configuration.taskDetails,
-            archivedTaskDetails: configuration.archivedTaskDetails,
+            taskIndex: taskIndex,
             taskMap: configuration.taskMap,
-        });
-    }
-
-    public updateTaskDetails(taskDetails: TaskDetail[]): void {
-        const configuration = this.getConfiguration();
-
-        this.updateConfiguration({
-            taskIndex: configuration.taskIndex,
-            taskDetails: taskDetails,
-            archivedTaskDetails: configuration.archivedTaskDetails,
-            taskMap: configuration.taskMap,
-        });
-    }
-
-    public updateArchivedTaskDetails(taskDetails: TaskDetail[]): void {
-        const configuration = this.getConfiguration();
-
-        this.updateConfiguration({
-            taskIndex: configuration.taskIndex,
-            taskDetails: configuration.taskDetails,
-            archivedTaskDetails: taskDetails,
-            taskMap: configuration.taskMap,
+            details: configuration.details,
         });
     }
 
@@ -92,9 +71,18 @@ export class Workspace {
 
         this.updateConfiguration({
             taskIndex: configuration.taskIndex,
-            taskDetails: configuration.taskDetails,
-            archivedTaskDetails: configuration.archivedTaskDetails,
             taskMap: taskMap,
+            details: configuration.details,
+        });
+    }
+
+    public updateDetails(details: TaskDetails): void {
+        const configuration = this.getConfiguration();
+
+        this.updateConfiguration({
+            taskIndex: configuration.taskIndex,
+            taskMap: configuration.taskMap,
+            details: details,
         });
     }
 

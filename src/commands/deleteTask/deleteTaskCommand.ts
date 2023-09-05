@@ -13,27 +13,33 @@ export async function deleteTaskCommand(uri: Uri): Promise<void> {
 
         if (taskDirectory) {
             const workspaceInstance = Workspace.getInstance(workspaceFolder);
-            const taskDetails = workspaceInstance.getConfiguration().taskDetails;
-            const taskMap = workspaceInstance.getConfiguration().taskMap;
+            const configuration = workspaceInstance.getConfiguration();
+
+            const taskMap = configuration.taskMap;
+            const details = configuration.details;
 
             const dirPath = join(workspaceFolder.uri.fsPath, taskDirectory);
-            const task = Task.getFromPath(uri.fsPath, dirPath, taskDetails);
+            const task = Task.getFromPath(uri.fsPath, dirPath, details.assigned);
 
             if (task) {
                 for (const key in taskMap) {
-                    if (taskMap[key].assigned.includes(task.index)) {
-                        taskMap[key].assigned = taskMap[key].assigned.filter((index) => task.index !== index);
-                        if (!taskMap[key].assigned.length && !taskMap[key].archived.length) {
+                    const object = taskMap[key];
+
+                    if (object.assigned.includes(task.index)) {
+                        // assignedからindexを取り除く
+                        taskMap[key].assigned = object.assigned.filter((index) => task.index !== index);
+                        details.assigned = details.assigned.filter((taskDetail) => task.index !== taskDetail.index);
+
+                        // assignedもarchivedも無い場合はオブジェクトごと取り除く
+                        if (!object.assigned.length && !object.archived.length) {
                             delete taskMap[key];
                         }
-
-                        const fixedTaskDetails = taskDetails.filter((taskDetail) => task.index !== taskDetail.index);
 
                         task.removeFile();
                         task.close();
 
-                        workspaceInstance.updateTaskDetails(fixedTaskDetails);
                         workspaceInstance.updateTaskMap(taskMap);
+                        workspaceInstance.updateDetails(details);
                         workspaceInstance.decorationProvider.decorate(taskMap);
                     }
                 }

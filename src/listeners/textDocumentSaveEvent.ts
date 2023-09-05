@@ -11,15 +11,18 @@ export function onDidSaveTextDocument(event: TextDocument, workspaceInstance: Wo
     const relativePath = workspace.asRelativePath(event.uri, false);
 
     const taskDirectory = config.getTaskDirectory();
-    if (taskDirectory) {
-        const dirPath = join(workspaceInstance.uri.fsPath, taskDirectory);
-        const taskDetails = workspaceInstance.getConfiguration().taskDetails;
+    const archivedTaskDirectory = config.getArchivedTaskDirectory();
 
-        const fixedTaskDetails = taskDetails.map((taskDetail) => {
-            const task = Task.getFromIndex(taskDetail.index, dirPath, taskDetails);
+    if (taskDirectory) {
+        const assigned = workspaceInstance.getConfiguration().details.assigned;
+        const archived = workspaceInstance.getConfiguration().details.archived;
+        const dirPath = join(workspaceInstance.uri.fsPath, taskDirectory);
+
+        const fixedAssigned = assigned.map((taskDetail) => {
+            const task = Task.getFromIndex(taskDetail.index, dirPath, assigned);
 
             if (task) {
-                if (relativePath === task.relativePath) {
+                if (task.relativePath === relativePath) {
                     const file = readFileSync(task.uri.fsPath, 'utf-8');
                     const name = file.split('\n')[0];
                     taskDetail.name = removeMarkdown(name);
@@ -29,19 +32,22 @@ export function onDidSaveTextDocument(event: TextDocument, workspaceInstance: Wo
             return taskDetail;
         });
 
-        workspaceInstance.updateTaskDetails(fixedTaskDetails);
+        workspaceInstance.updateDetails({
+            assigned: fixedAssigned,
+            archived: archived,
+        });
     }
 
-    const archivedTaskDirectory = config.getArchivedTaskDirectory();
     if (archivedTaskDirectory) {
-        const archiveDirPath = join(workspaceInstance.uri.fsPath, archivedTaskDirectory);
-        const taskDetails = workspaceInstance.getConfiguration().taskDetails;
+        const assigned = workspaceInstance.getConfiguration().details.assigned;
+        const archived = workspaceInstance.getConfiguration().details.archived;
+        const dirPath = join(workspaceInstance.uri.fsPath, archivedTaskDirectory);
 
-        const fixedTaskDetails = taskDetails.map((taskDetail) => {
-            const task = Task.getFromIndex(taskDetail.index, archiveDirPath, taskDetails);
+        const fixedArchived = archived.map((taskDetail) => {
+            const task = Task.getFromIndex(taskDetail.index, dirPath, archived);
 
             if (task) {
-                if (relativePath === task.relativePath) {
+                if (task.relativePath === relativePath) {
                     const file = readFileSync(task.uri.fsPath, 'utf-8');
                     const name = file.split('\n')[0];
                     taskDetail.name = removeMarkdown(name);
@@ -51,6 +57,9 @@ export function onDidSaveTextDocument(event: TextDocument, workspaceInstance: Wo
             return taskDetail;
         });
 
-        workspaceInstance.updateTaskDetails(fixedTaskDetails);
+        workspaceInstance.updateDetails({
+            assigned: assigned,
+            archived: fixedArchived,
+        });
     }
 }
