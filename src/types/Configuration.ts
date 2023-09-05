@@ -10,7 +10,7 @@ export type TaskMap = {
     [filePath: string]: {
         assigned: number[];
         archived: number[];
-    };
+    } | undefined;
 };
 
 export type TaskDetails = {

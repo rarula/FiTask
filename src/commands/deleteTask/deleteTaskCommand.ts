@@ -25,9 +25,9 @@ export async function deleteTaskCommand(uri: Uri): Promise<void> {
                 for (const key in taskMap) {
                     const object = taskMap[key];
 
-                    if (object.assigned.includes(task.index)) {
+                    if (object?.assigned.includes(task.index)) {
                         // assignedからindexを取り除く
-                        taskMap[key].assigned = object.assigned.filter((index) => task.index !== index);
+                        object.assigned = object.assigned.filter((index) => task.index !== index);
                         details.assigned = details.assigned.filter((taskDetail) => task.index !== taskDetail.index);
 
                         // assignedもarchivedも無い場合はオブジェクトごと取り除く

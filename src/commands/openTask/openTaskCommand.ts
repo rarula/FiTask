@@ -17,7 +17,7 @@ export async function openTaskCommand(uri: Uri): Promise<void> {
         const selectedPath = workspace.asRelativePath(uri, false);
         const object = taskMap[selectedPath];
 
-        if (object.assigned.length) {
+        if (object?.assigned.length) {
             const taskDirectory = config.getTaskDirectory();
 
             if (taskDirectory) {

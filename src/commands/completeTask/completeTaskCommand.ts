@@ -28,13 +28,13 @@ export async function completeTaskCommand(uri: Uri): Promise<void> {
                     for (const key in taskMap) {
                         const object = taskMap[key];
 
-                        if (object.assigned.includes(task.index)) {
+                        if (object?.assigned.includes(task.index)) {
                             // archivedにindexを追加
-                            taskMap[key].archived.push(task.index);
+                            object.archived.push(task.index);
                             details.archived.push(...details.assigned.filter((taskDetail) => task.index === taskDetail.index));
 
                             // assignedからindexを取り除く
-                            taskMap[key].assigned = object.assigned.filter((index) => task.index !== index);
+                            object.assigned = object.assigned.filter((index) => task.index !== index);
                             details.assigned = details.assigned.filter((taskDetail) => task.index !== taskDetail.index);
 
                             const archiveDirPath = join(workspaceFolder.uri.fsPath, archivedTaskDirectory);

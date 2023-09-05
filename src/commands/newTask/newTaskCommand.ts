@@ -32,7 +32,7 @@ export async function newTaskCommand(uri: Uri, taskType: TemplateTaskType): Prom
                 const selectedPath = workspace.asRelativePath(uri, false);
 
                 if (taskMap[selectedPath]) {
-                    taskMap[selectedPath].assigned.push(task.index);
+                    taskMap[selectedPath]?.assigned.push(task.index);
                 } else {
                     taskMap[selectedPath] = {
                         assigned: [task.index],

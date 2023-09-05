@@ -50,7 +50,7 @@ export async function newTemplateTaskCommand(uri: Uri): Promise<void> {
                             const selectedPath = workspace.asRelativePath(uri, false);
 
                             if (taskMap[selectedPath]) {
-                                taskMap[selectedPath].assigned.push(task.index);
+                                taskMap[selectedPath]?.assigned.push(task.index);
                             } else {
                                 taskMap[selectedPath] = {
                                     assigned: [task.index],
