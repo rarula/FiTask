@@ -43,12 +43,16 @@ export async function newTemplateTaskCommand(uri: Uri): Promise<void> {
                             const configuration = workspaceInstance.getConfiguration();
                             const taskIndex = configuration.taskIndex;
                             const taskDetails = configuration.taskDetails;
+                            const archivedTaskDetails = configuration.archivedTaskDetails;
                             const taskMap = configuration.taskMap;
 
                             if (taskMap[selectedPath]) {
-                                taskMap[selectedPath].push(taskIndex);
+                                taskMap[selectedPath].assigned.push(taskIndex);
                             } else {
-                                taskMap[selectedPath] = [taskIndex];
+                                taskMap[selectedPath] = {
+                                    archived: [],
+                                    assigned: [taskIndex],
+                                };
                             }
 
                             const saveDirPath = join(workspaceFolder.uri.fsPath, taskDirectory);
@@ -62,6 +66,7 @@ export async function newTemplateTaskCommand(uri: Uri): Promise<void> {
                             workspaceInstance.updateConfiguration({
                                 taskIndex: taskIndex + 1,
                                 taskDetails: taskDetails,
+                                archivedTaskDetails: archivedTaskDetails,
                                 taskMap: taskMap,
                             });
                             workspaceInstance.decorationProvider.decorate(taskMap);

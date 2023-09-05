@@ -8,6 +8,10 @@ export function getTaskDirectory(): string | undefined {
     return workspace.getConfiguration(SECTION).get<string>('taskDirectory');
 }
 
+export function getArchivedTaskDirectory(): string | undefined {
+    return workspace.getConfiguration(SECTION).get<string>('archivedTaskDirectory');
+}
+
 export function getCustomTaskTemplate(): string[] | undefined {
     return workspace.getConfiguration(SECTION).get<string[]>('customTaskTemplate');
 }

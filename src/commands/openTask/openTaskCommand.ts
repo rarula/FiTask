@@ -15,7 +15,7 @@ export async function openTaskCommand(uri: Uri): Promise<void> {
         const taskDetails = configuration.taskDetails;
         const taskMap = configuration.taskMap;
 
-        if (taskMap[selectedPath]) {
+        if (taskMap[selectedPath].assigned.length) {
             const taskDirectory = config.getTaskDirectory();
 
             if (taskDirectory) {
@@ -23,7 +23,7 @@ export async function openTaskCommand(uri: Uri): Promise<void> {
                 const quickPickItems: QuickPickItem[] = [];
                 const tasks: Task[] = [];
 
-                for (const index of taskMap[selectedPath]) {
+                for (const index of taskMap[selectedPath].assigned) {
                     const task = Task.getFromIndex(index, saveDirPath, taskDetails);
 
                     if (task) {

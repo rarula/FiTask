@@ -8,9 +8,9 @@ import { Task } from '../task';
 import { Workspace } from '../workspace';
 
 export function onDidSaveTextDocument(event: TextDocument, workspaceInstance: Workspace): void {
-    const taskDirectory = config.getTaskDirectory();
     const relativePath = workspace.asRelativePath(event.uri, false);
 
+    const taskDirectory = config.getTaskDirectory();
     if (taskDirectory) {
         const saveDirPath = join(workspaceInstance.uri.fsPath, taskDirectory);
         const taskDetails = workspaceInstance.getConfiguration().taskDetails;
@@ -22,7 +22,7 @@ export function onDidSaveTextDocument(event: TextDocument, workspaceInstance: Wo
                 const taskRelativePath = workspace.asRelativePath(task.uri);
 
                 if (relativePath === taskRelativePath) {
-                    const file = readFileSync(event.uri.fsPath, 'utf-8');
+                    const file = readFileSync(task.uri.fsPath, 'utf-8');
                     const name = file.split('\n')[0];
                     taskDetail.name = removeMarkdown(name);
                 }
@@ -31,8 +31,30 @@ export function onDidSaveTextDocument(event: TextDocument, workspaceInstance: Wo
             return taskDetail;
         });
 
-        if (fixedTaskDetails) {
-            workspaceInstance.updateTaskDetails(fixedTaskDetails);
-        }
+        workspaceInstance.updateTaskDetails(fixedTaskDetails);
+    }
+
+    const archivedTaskDirectory = config.getArchivedTaskDirectory();
+    if (archivedTaskDirectory) {
+        const archiveDirPath = join(workspaceInstance.uri.fsPath, archivedTaskDirectory);
+        const taskDetails = workspaceInstance.getConfiguration().taskDetails;
+
+        const fixedTaskDetails = taskDetails.map((taskDetail) => {
+            const task = Task.getFromIndex(taskDetail.index, archiveDirPath, taskDetails);
+
+            if (task) {
+                const taskRelativePath = workspace.asRelativePath(task.uri);
+
+                if (relativePath === taskRelativePath) {
+                    const file = readFileSync(task.uri.fsPath, 'utf-8');
+                    const name = file.split('\n')[0];
+                    taskDetail.name = removeMarkdown(name);
+                }
+            }
+
+            return taskDetail;
+        });
+
+        workspaceInstance.updateTaskDetails(fixedTaskDetails);
     }
 }

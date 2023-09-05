@@ -12,6 +12,7 @@ const CONFIG_FILE_NAME = 'fitask.config.json';
 const DEFAULT_CONFIG: Configuration = {
     taskIndex: 1,
     taskDetails: [],
+    archivedTaskDetails: [],
     taskMap: {},
 };
 
@@ -59,6 +60,7 @@ export class Workspace {
         this.updateConfiguration({
             taskIndex: index,
             taskDetails: configuration.taskDetails,
+            archivedTaskDetails: configuration.archivedTaskDetails,
             taskMap: configuration.taskMap,
         });
     }
@@ -69,6 +71,18 @@ export class Workspace {
         this.updateConfiguration({
             taskIndex: configuration.taskIndex,
             taskDetails: taskDetails,
+            archivedTaskDetails: configuration.archivedTaskDetails,
+            taskMap: configuration.taskMap,
+        });
+    }
+
+    public updateArchivedTaskDetails(taskDetails: TaskDetail[]): void {
+        const configuration = this.getConfiguration();
+
+        this.updateConfiguration({
+            taskIndex: configuration.taskIndex,
+            taskDetails: configuration.taskDetails,
+            archivedTaskDetails: taskDetails,
             taskMap: configuration.taskMap,
         });
     }
@@ -79,6 +93,7 @@ export class Workspace {
         this.updateConfiguration({
             taskIndex: configuration.taskIndex,
             taskDetails: configuration.taskDetails,
+            archivedTaskDetails: configuration.archivedTaskDetails,
             taskMap: taskMap,
         });
     }

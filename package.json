@@ -72,6 +72,11 @@
                 "title": "Open Assigned Task"
             },
             {
+                "command": "fiTask.completeTask",
+                "title": "Complete Task",
+                "icon": "$(check-all)"
+            },
+            {
                 "command": "fiTask.deleteTask",
                 "title": "Delete Task",
                 "icon": "$(trash)"
@@ -116,6 +121,11 @@
             ],
             "editor/title": [
                 {
+                    "command": "fiTask.completeTask",
+                    "when": "resourceLangId == markdown",
+                    "group": "navigation"
+                },
+                {
                     "command": "fiTask.deleteTask",
                     "when": "resourceLangId == markdown",
                     "group": "navigation"
@@ -158,6 +168,14 @@
                     "when": "false"
                 },
                 {
+                    "command": "fiTask.completeTask",
+                    "when": "false"
+                },
+                {
+                    "command": "fiTask.deleteTask",
+                    "when": "false"
+                },
+                {
                     "command": "fiTask.deleteAllTasks",
                     "when": "false"
                 }
@@ -170,6 +188,11 @@
                     "type": "string",
                     "default": "FiTask",
                     "description": "Name of the directory to save the tasks."
+                },
+                "fiTask.archivedTaskDirectory": {
+                    "type": "string",
+                    "default": "FiTaskArchive",
+                    "description": "Name of the directory to save archived tasks."
                 },
                 "fiTask.customTaskTemplate": {
                     "type": "array",

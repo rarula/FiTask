@@ -3,6 +3,7 @@ import { TaskType } from './TaskType';
 export type Configuration = {
     taskIndex: number;
     taskDetails: TaskDetail[];
+    archivedTaskDetails: TaskDetail[];
     taskMap: TaskMap;
 };
 
@@ -13,5 +14,8 @@ export type TaskDetail = {
 };
 
 export type TaskMap = {
-    [filePath: string]: number[];
+    [filePath: string]: {
+        archived: number[];
+        assigned: number[];
+    };
 };

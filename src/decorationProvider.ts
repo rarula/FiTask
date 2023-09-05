@@ -23,15 +23,17 @@ export class TaskDecorationProvider implements FileDecorationProvider {
         const newTaskMap: Map<string, FileDecoration> = new Map();
 
         for (const key in taskMap) {
-            const fullPath = join(this.workspace.uri.fsPath, key);
-            const uri = Uri.file(fullPath);
+            if (taskMap[key].assigned.length) {
+                const fullPath = join(this.workspace.uri.fsPath, key);
+                const uri = Uri.file(fullPath);
 
-            newTaskMap.set(uri.fsPath, {
-                tooltip: 'Total tasks',
-                propagate: false,
-                badge: taskMap[key].length.toString(),
-                color: new ThemeColor('fiTaskDecoration.taskedResourceForeground'),
-            });
+                newTaskMap.set(uri.fsPath, {
+                    tooltip: 'Total tasks',
+                    propagate: false,
+                    badge: taskMap[key].assigned.length.toString(),
+                    color: new ThemeColor('fiTaskDecoration.taskedResourceForeground'),
+                });
+            }
         }
 
         const uris = new Set([...this.taskMap.keys()].concat([...newTaskMap.keys()]));

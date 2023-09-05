@@ -1,4 +1,4 @@
-import { ensureFileSync, existsSync, removeSync, writeFileSync } from 'fs-extra';
+import { ensureFileSync, existsSync, readFileSync, removeSync, writeFileSync } from 'fs-extra';
 import { basename, join } from 'path';
 import { commands, Range, Uri, window } from 'vscode';
 
@@ -55,6 +55,15 @@ export class Task {
             }
         } catch (error) {
             console.error(error);
+        }
+    }
+
+    public readFile(): string {
+        try {
+            return readFileSync(this.uri.fsPath, 'utf-8');
+        } catch (error) {
+            console.error(error);
+            return '';
         }
     }
 
