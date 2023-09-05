@@ -43,7 +43,7 @@
     },
     "main": "./dist/extension.js",
     "activationEvents": [
-        "onStartupFinished"
+        "workspaceContains:fitask.config.json"
     ],
     "contributes": {
         "commands": [
