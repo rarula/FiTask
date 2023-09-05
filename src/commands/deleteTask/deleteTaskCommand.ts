@@ -37,6 +37,9 @@ export async function deleteTaskCommand(uri: Uri): Promise<void> {
                         workspaceInstance.decorationProvider.decorate(taskMap);
                     }
                 }
+            } else {
+                // このファイルはタスクではありません。
+                window.showErrorMessage('This file is not a task.');
             }
         } else {
             // タスクを保存するディレクトリが指定されていないため削除することができません。
