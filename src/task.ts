@@ -1,11 +1,16 @@
-import { ensureFileSync, existsSync, writeFileSync } from 'fs-extra';
-import { join } from 'path';
+import { ensureFileSync, existsSync, removeSync, writeFileSync } from 'fs-extra';
+import { basename, join } from 'path';
 import { commands, Range, Uri, window } from 'vscode';
 
 import { TaskDetail } from './types/Configuration';
 import { TaskType } from './types/TaskType';
 
 export class Task {
+    public static getFromPath(path: string, saveDirPath: string, taskDetails: TaskDetail[]): Task | undefined {
+        const index = parseInt(basename(path, '.md'));
+        return Task.getFromIndex(index, saveDirPath, taskDetails);
+    }
+
     public static getFromIndex(index: number, saveDirPath: string, taskDetails: TaskDetail[]): Task | undefined {
         for (const taskDetail of taskDetails) {
             if (taskDetail.index === index) {
@@ -43,11 +48,27 @@ export class Task {
         }
     }
 
+    public removeFile(): void {
+        try {
+            if (existsSync(this.uri.fsPath)) {
+                removeSync(this.uri.fsPath);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     public open(range?: Range): void {
         window.showTextDocument(this.uri, { selection: range });
     }
 
     public openPreview(): void {
         commands.executeCommand('markdown.showPreview', this.uri);
+    }
+
+    public close(): void {
+        window.showTextDocument(this.uri).then(() => {
+            return commands.executeCommand('workbench.action.closeActiveEditor');
+        });
     }
 }

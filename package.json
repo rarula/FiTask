@@ -72,6 +72,11 @@
                 "title": "Open Assigned Task"
             },
             {
+                "command": "fiTask.deleteTask",
+                "title": "Delete Task",
+                "icon": "$(trash)"
+            },
+            {
                 "command": "fiTask.deleteAllTasks",
                 "title": "Delete All Tasks"
             }
@@ -107,6 +112,13 @@
                 {
                     "command": "fiTask.openTask",
                     "group": "1_navigation@1"
+                }
+            ],
+            "editor/title": [
+                {
+                    "command": "fiTask.deleteTask",
+                    "when": "resourceLangId == markdown",
+                    "group": "navigation"
                 }
             ],
             "explorer/context": [
@@ -165,7 +177,7 @@
                     "description": "Contents of the template used to create the task.",
                     "items": {
                         "type": "string",
-                        "description": "One item is interpreted as one line. The following variables are substituted during template creation.\n%name% - Task Name"
+                        "description": "One item is interpreted as one line. The following variables are substituted during template creation.\n{name} - Task name\n{cursor} - Cursor position"
                     }
                 },
                 "fiTask.customBugTaskTemplate": {
@@ -174,7 +186,7 @@
                     "description": "Contents of the template used to create the bug task.",
                     "items": {
                         "type": "string",
-                        "description": "One item is interpreted as one line. The following variables are substituted during template creation.\n%name% - Task Name"
+                        "description": "One item is interpreted as one line. The following variables are substituted during template creation.\n{name} - Task name\n{cursor} - Cursor position"
                     }
                 },
                 "fiTask.customRefactoringTaskTemplate": {
@@ -183,7 +195,7 @@
                     "description": "Contents of the template used to create the refactoring task.",
                     "items": {
                         "type": "string",
-                        "description": "One item is interpreted as one line. The following variables are substituted during template creation.\n%name% - Task Name"
+                        "description": "One item is interpreted as one line. The following variables are substituted during template creation.\n{name} - Task name\n{cursor} - Cursor position"
                     }
                 },
                 "fiTask.customTestingTaskTemplate": {
@@ -192,7 +204,7 @@
                     "description": "Contents of the template used to create the testing task.",
                     "items": {
                         "type": "string",
-                        "description": "One item is interpreted as one line. The following variables are substituted during template creation.\n%name% - Task Name"
+                        "description": "One item is interpreted as one line. The following variables are substituted during template creation.\n{name} - Task name\n{cursor} - Cursor position"
                     }
                 },
                 "fiTask.customTaskTemplates": {
@@ -215,7 +227,7 @@
                                 "description": "Contents of the task template.",
                                 "items": {
                                     "type": "string",
-                                    "description": "One item is interpreted as one line. The following variables are substituted during template creation.\n%name% - Task Name"
+                                    "description": "One item is interpreted as one line. The following variables are substituted during template creation.\n{name} - Task name\n{cursor} - Cursor position"
                                 }
                             }
                         }
