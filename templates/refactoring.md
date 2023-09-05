@@ -2,7 +2,7 @@
 
 ## Details
 > Please provide here detailed information about the code or component that needs refactoring. Explain the purpose of the refactoring and the reason for it.
-{cursor}
+
 ## Code To Be Refactored
 > Please provide information about the code that needs refactoring. Include the location of the code, etc.
 
@@ -11,3 +11,4 @@
 
 ## Additional Information
 > Please provide additional information about the refactoring here.
+{cursor}
