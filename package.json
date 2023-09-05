@@ -84,10 +84,6 @@
                 "command": "fiTask.deleteTask",
                 "title": "Delete Task",
                 "icon": "$(trash)"
-            },
-            {
-                "command": "fiTask.deleteAllTasks",
-                "title": "Delete All Tasks"
             }
         ],
         "submenus": [
@@ -143,11 +139,6 @@
                 {
                     "submenu": "submenu/fiTask",
                     "group": "navigation@-1"
-                },
-                {
-                    "command": "fiTask.deleteAllTasks",
-                    "when": "explorerResourceIsFolder && resourceFilename in fiTask.taskDirectory",
-                    "group": "fiTask@1"
                 }
             ],
             "commandPalette": [
@@ -185,10 +176,6 @@
                 },
                 {
                     "command": "fiTask.deleteTask",
-                    "when": "false"
-                },
-                {
-                    "command": "fiTask.deleteAllTasks",
                     "when": "false"
                 }
             ]

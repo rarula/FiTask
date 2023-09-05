@@ -1,8 +1,6 @@
 import { commands, ExtensionContext, Uri, workspace } from 'vscode';
 
-import { completeTaskCommand, deleteAllTasksCommand, deleteTaskCommand, newTaskCommand, newTemplateTaskCommand, openArchivedTaskCommand, openAssignedTaskCommand } from './commands';
-import * as config from './configuration';
-import { onDidChangeConfiguration } from './listeners/configurationChangeEvent';
+import { completeTaskCommand, deleteTaskCommand, newTaskCommand, newTemplateTaskCommand, openArchivedTaskCommand, openAssignedTaskCommand } from './commands';
 import { Template } from './template';
 import { Workspace } from './workspace';
 
@@ -12,14 +10,6 @@ export function activate(context: ExtensionContext): void {
 
         workspaceInstance.decorationProvider.decorate(workspaceInstance.getConfiguration().taskMap);
     });
-
-    // register contexts
-    commands.executeCommand('setContext', 'fiTask.taskDirectory', [
-        config.getTaskDirectory(),
-    ]);
-
-    // register events
-    workspace.onDidChangeConfiguration((event) => onDidChangeConfiguration(event));
 
     // register command
     context.subscriptions.push(
@@ -32,7 +22,6 @@ export function activate(context: ExtensionContext): void {
         commands.registerCommand('fiTask.openArchivedTask', (uri: Uri) => openArchivedTaskCommand(uri)),
         commands.registerCommand('fiTask.completeTask', (uri: Uri) => completeTaskCommand(uri)),
         commands.registerCommand('fiTask.deleteTask', (uri: Uri) => deleteTaskCommand(uri)),
-        commands.registerCommand('fiTask.deleteAllTasks', (uri: Uri) => deleteAllTasksCommand(uri)),
     );
 
     // read templates
