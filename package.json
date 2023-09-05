@@ -1,14 +1,30 @@
 {
     "name": "fi-task",
     "displayName": "FiTask",
-    "description": "Assign and manage tasks to files",
-    "version": "0.0.1",
+    "description": "VSCode extension for linking and managing files and tasks.",
+    "version": "1.0.0",
+    "icon": "icon.png",
+    "license": "MIT",
+    "publisher": "rarula",
+    "author": "rarula",
     "engines": {
         "vscode": "^1.81.0"
     },
+    "keywords": [
+        "fitask",
+        "task",
+        "todo"
+    ],
     "categories": [
         "Other"
     ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/rarula/FiTask.git"
+    },
+    "bugs": {
+        "url": "https://github.com/rarula/FiTask/issues"
+    },
     "scripts": {
         "vscode:prepublish": "npm run package",
         "compile": "webpack",
