@@ -12,40 +12,72 @@ export async function deleteTaskCommand(uri: Uri): Promise<void> {
         const taskDirectory = config.getTaskDirectory();
 
         if (taskDirectory) {
-            const workspaceInstance = Workspace.getInstance(workspaceFolder);
-            const configuration = workspaceInstance.getConfiguration();
+            const archivedTaskDirectory = config.getArchivedTaskDirectory();
 
-            const taskMap = configuration.taskMap;
-            const details = configuration.details;
+            if (archivedTaskDirectory) {
+                const workspaceInstance = Workspace.getInstance(workspaceFolder);
+                const configuration = workspaceInstance.getConfiguration();
 
-            const dirPath = join(workspaceFolder.uri.fsPath, taskDirectory);
-            const task = Task.getFromPath(uri.fsPath, dirPath, details.assigned);
+                const taskMap = configuration.taskMap;
+                const details = configuration.details;
 
-            if (task) {
-                for (const key in taskMap) {
-                    const object = taskMap[key];
+                const assignedDirPath = join(workspaceFolder.uri.fsPath, taskDirectory);
+                const assignedTask = Task.getFromPath(uri.fsPath, assignedDirPath, details.assigned);
 
-                    if (object?.assigned.includes(task.index)) {
-                        // assignedからindexを取り除く
-                        object.assigned = object.assigned.filter((index) => task.index !== index);
-                        details.assigned = details.assigned.filter((taskDetail) => task.index !== taskDetail.index);
+                const archivedDirPath = join(workspaceFolder.uri.fsPath, archivedTaskDirectory);
+                const archivedTask = Task.getFromPath(uri.fsPath, archivedDirPath, details.archived);
 
-                        // assignedもarchivedも無い場合はオブジェクトごと取り除く
-                        if (!object.assigned.length && !object.archived.length) {
-                            delete taskMap[key];
+                if (assignedTask) {
+                    for (const key in taskMap) {
+                        const object = taskMap[key];
+
+                        if (object?.assigned.includes(assignedTask.index)) {
+                            // assignedからindexを取り除く
+                            object.assigned = object.assigned.filter((index) => assignedTask.index !== index);
+                            details.assigned = details.assigned.filter((taskDetail) => assignedTask.index !== taskDetail.index);
+
+                            // assignedもarchivedも無い場合はオブジェクトごと取り除く
+                            if (!object.assigned.length && !object.archived.length) {
+                                delete taskMap[key];
+                            }
+
+                            assignedTask.removeFile();
+                            assignedTask.close();
+
+                            workspaceInstance.updateTaskMap(taskMap);
+                            workspaceInstance.updateDetails(details);
+                            workspaceInstance.decorationProvider.decorate(taskMap);
                         }
-
-                        task.removeFile();
-                        task.close();
-
-                        workspaceInstance.updateTaskMap(taskMap);
-                        workspaceInstance.updateDetails(details);
-                        workspaceInstance.decorationProvider.decorate(taskMap);
                     }
+                } else if (archivedTask) {
+                    for (const key in taskMap) {
+                        const object = taskMap[key];
+
+                        if (object?.archived.includes(archivedTask.index)) {
+                            // archivedからindexを取り除く
+                            object.archived = object.archived.filter((index) => archivedTask.index !== index);
+                            details.archived = details.archived.filter((taskDetail) => archivedTask.index !== taskDetail.index);
+
+                            // assignedもarchivedも無い場合はオブジェクトごと取り除く
+                            if (!object.assigned.length && !object.archived.length) {
+                                delete taskMap[key];
+                            }
+
+                            archivedTask.removeFile();
+                            archivedTask.close();
+
+                            workspaceInstance.updateTaskMap(taskMap);
+                            workspaceInstance.updateDetails(details);
+                            workspaceInstance.decorationProvider.decorate(taskMap);
+                        }
+                    }
+                } else {
+                    // このファイルはタスクではありません。
+                    window.showErrorMessage('This file is not a task.');
                 }
             } else {
-                // このファイルはタスクではありません。
-                window.showErrorMessage('This file is not a task.');
+                // アーカイブとしてタスクを保存するディレクトリが指定されていないため削除することができません。
+                window.showErrorMessage('Cannot delete because the directory to save the task as an archive is not specified.');
             }
         } else {
             // タスクを保存するディレクトリが指定されていないため削除することができません。
