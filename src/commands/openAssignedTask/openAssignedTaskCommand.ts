@@ -5,7 +5,7 @@ import * as config from '../../configuration';
 import { Task } from '../../task';
 import { Workspace } from '../../workspace';
 
-export async function openTaskCommand(uri: Uri): Promise<void> {
+export async function openAssignedTaskCommand(uri: Uri): Promise<void> {
     const workspaceFolder = workspace.getWorkspaceFolder(uri);
 
     if (workspaceFolder) {
@@ -78,8 +78,8 @@ export async function openTaskCommand(uri: Uri): Promise<void> {
                 window.showErrorMessage('Cannot open because the directory to save the task is not specified.');
             }
         } else {
-            // タスクが割り当てられていません。
-            window.showInformationMessage('No task assigned.');
+            // 割り当てられたタスクはありません。
+            window.showInformationMessage('No tasks assigned.');
         }
     } else {
         // ワークスペースを開いていないため開くことができません。

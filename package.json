@@ -68,8 +68,12 @@
                 "title": "New Task With Templates..."
             },
             {
-                "command": "fiTask.openTask",
+                "command": "fiTask.openAssignedTask",
                 "title": "Open Assigned Task"
+            },
+            {
+                "command": "fiTask.openArchivedTask",
+                "title": "Open Archived Task"
             },
             {
                 "command": "fiTask.completeTask",
@@ -115,8 +119,12 @@
                     "group": "0_newTask@5"
                 },
                 {
-                    "command": "fiTask.openTask",
+                    "command": "fiTask.openAssignedTask",
                     "group": "1_navigation@1"
+                },
+                {
+                    "command": "fiTask.openArchivedTask",
+                    "group": "1_navigation@2"
                 }
             ],
             "editor/title": [
@@ -164,7 +172,11 @@
                     "when": "false"
                 },
                 {
-                    "command": "fiTask.openTask",
+                    "command": "fiTask.openAssignedTask",
+                    "when": "false"
+                },
+                {
+                    "command": "fiTask.openArchivedTask",
                     "when": "false"
                 },
                 {
