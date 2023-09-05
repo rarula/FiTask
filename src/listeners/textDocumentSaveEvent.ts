@@ -19,9 +19,7 @@ export function onDidSaveTextDocument(event: TextDocument, workspaceInstance: Wo
             const task = Task.getFromIndex(taskDetail.index, saveDirPath, taskDetails);
 
             if (task) {
-                const taskRelativePath = workspace.asRelativePath(task.uri);
-
-                if (relativePath === taskRelativePath) {
+                if (relativePath === task.relativePath) {
                     const file = readFileSync(task.uri.fsPath, 'utf-8');
                     const name = file.split('\n')[0];
                     taskDetail.name = removeMarkdown(name);
@@ -43,9 +41,7 @@ export function onDidSaveTextDocument(event: TextDocument, workspaceInstance: Wo
             const task = Task.getFromIndex(taskDetail.index, archiveDirPath, taskDetails);
 
             if (task) {
-                const taskRelativePath = workspace.asRelativePath(task.uri);
-
-                if (relativePath === taskRelativePath) {
+                if (relativePath === task.relativePath) {
                     const file = readFileSync(task.uri.fsPath, 'utf-8');
                     const name = file.split('\n')[0];
                     taskDetail.name = removeMarkdown(name);

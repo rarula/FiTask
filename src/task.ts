@@ -1,6 +1,6 @@
 import { ensureFileSync, existsSync, readFileSync, removeSync, writeFileSync } from 'fs-extra';
 import { basename, join } from 'path';
-import { commands, Range, Uri, window } from 'vscode';
+import { commands, Range, Uri, window, workspace } from 'vscode';
 
 import { TaskDetail } from './types/Configuration';
 import { TaskType } from './types/TaskType';
@@ -23,6 +23,7 @@ export class Task {
     public readonly index: number;
     public readonly type: TaskType;
     public readonly uri: Uri;
+    public readonly relativePath: string;
 
     constructor(
         name: string,
@@ -35,6 +36,7 @@ export class Task {
         this.index = index;
         this.type = type;
         this.uri = Uri.file(taskFilePath);
+        this.relativePath = workspace.asRelativePath(this.uri);
     }
 
     public createFile(content: string): void {
