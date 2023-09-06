@@ -1,3 +1,4 @@
+# defaults
 .vscode/**
 .vscode-test/**
 out/**
@@ -11,3 +12,7 @@ vsc-extension-quickstart.md
 **/.eslintrc.json
 **/*.map
 **/*.ts
+
+# additional
+.editorconfig
+dprint.json
