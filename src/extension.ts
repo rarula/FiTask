@@ -1,3 +1,4 @@
+import { existsSync } from 'fs-extra';
 import { commands, ExtensionContext, Uri, workspace } from 'vscode';
 
 import { completeTaskCommand, deleteTaskCommand, newTaskCommand, newTemplateTaskCommand, openArchivedTaskCommand, openAssignedTaskCommand } from './commands';
@@ -8,7 +9,9 @@ export function activate(context: ExtensionContext): void {
     workspace.workspaceFolders?.forEach((workspaceFolder) => {
         const workspaceInstance = Workspace.getInstance(workspaceFolder);
 
-        workspaceInstance.decorationProvider.decorate(workspaceInstance.getConfiguration().taskMap);
+        if (existsSync(workspaceInstance.configFilePath)) {
+            workspaceInstance.decorationProvider.decorate(workspaceInstance.getConfiguration().taskMap);
+        }
     });
 
     // register command
