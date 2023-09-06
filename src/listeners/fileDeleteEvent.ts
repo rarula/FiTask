@@ -1,12 +1,13 @@
+import { existsSync } from 'fs-extra';
 import { join } from 'path';
 import { FileDeleteEvent, workspace } from 'vscode';
 
 import { getArchivedTaskDirectory, getTaskDirectory } from '../configuration';
 import { Task } from '../task';
-import { CONFIG_FILE_NAME, Workspace } from '../workspace';
+import { Workspace } from '../workspace';
 
 export function onDidFileDelete(event: FileDeleteEvent, workspaceInstance: Workspace): void {
-    if (!event.files.map((uri) => workspace.asRelativePath(uri)).includes(CONFIG_FILE_NAME)) {
+    if (existsSync(workspaceInstance.configFilePath)) {
         const configuration = workspaceInstance.getConfiguration();
         const taskMap = configuration.taskMap;
         const details = configuration.details;

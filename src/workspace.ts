@@ -8,7 +8,7 @@ import { onDidFileRename } from './listeners/fileRenameEvent';
 import { onDidSaveTextDocument } from './listeners/textDocumentSaveEvent';
 import { Configuration, TaskDetails, TaskMap } from './types/Configuration';
 
-export const CONFIG_FILE_NAME = 'fitask.config.json';
+const CONFIG_FILE_NAME = 'fitask.config.json';
 
 const DEFAULT_CONFIG: Configuration = {
     taskIndex: 1,
@@ -27,10 +27,12 @@ export class Workspace {
     }
 
     public readonly uri: Uri;
+    public readonly configFilePath: string;
     public readonly decorationProvider: TaskDecorationProvider;
 
     private constructor(workspaceFolder: WorkspaceFolder) {
         this.uri = workspaceFolder.uri;
+        this.configFilePath = join(this.uri.fsPath, CONFIG_FILE_NAME);
         this.decorationProvider = new TaskDecorationProvider(this);
 
         // register file decoration provider
@@ -46,15 +48,14 @@ export class Workspace {
     }
 
     public getConfiguration(): Configuration {
-        const configFilePath = join(this.uri.fsPath, CONFIG_FILE_NAME);
         let config = DEFAULT_CONFIG;
 
         try {
-            if (existsSync(configFilePath)) {
-                config = readJsonSync(configFilePath);
+            if (existsSync(this.configFilePath)) {
+                config = readJsonSync(this.configFilePath);
             } else {
                 this.generateConfiguration();
-                config = readJsonSync(configFilePath);
+                config = readJsonSync(this.configFilePath);
             }
         } catch (error) {
             console.error(error);
