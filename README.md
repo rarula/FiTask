@@ -8,6 +8,7 @@ VSCode extension for linking and managing files and tasks.
   - [Assign tasks to files](#assign-tasks-to-files)
   - [Customizable task templates](#customizable-task-templates)
   - [Archiving and deleting tasks](#archiving-and-deleting-tasks)
+- [Support and Feedback](#support-and-feedback)
 - [Special Thanks](#special-thanks)
 - [License](#license)
 
@@ -31,8 +32,11 @@ Archived tasks are stored in a dedicated directory and can be opened from the fi
 
 ![gif](images/archivingAndDeleting.gif)
 
+## Support and Feedback
+If you have questions, suggestions, bug reports, etc., please report the issue on [Issues](https://github.com/rarula/FiTask/issues).
+
 ## Special Thanks
 Thanks to [Mint](https://twitter.com/ShunjuMint) for creating the FiTask icon. Thank you very much!
 
 ## License
-[MIT](LICENSE)
+This extension is provided under the [MIT License](LICENSE).
