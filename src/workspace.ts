@@ -3,11 +3,12 @@ import { join } from 'path';
 import { Uri, window, workspace, WorkspaceFolder } from 'vscode';
 
 import { TaskDecorationProvider } from './decorationProvider';
+import { onDidFileDelete } from './listeners/fileDeleteEvent';
 import { onDidFileRename } from './listeners/fileRenameEvent';
 import { onDidSaveTextDocument } from './listeners/textDocumentSaveEvent';
 import { Configuration, TaskDetails, TaskMap } from './types/Configuration';
 
-const CONFIG_FILE_NAME = 'fitask.config.json';
+export const CONFIG_FILE_NAME = 'fitask.config.json';
 
 const DEFAULT_CONFIG: Configuration = {
     taskIndex: 1,
@@ -37,6 +38,7 @@ export class Workspace {
 
         // register events
         workspace.onDidRenameFiles((event) => onDidFileRename(event, this));
+        workspace.onDidDeleteFiles((event) => onDidFileDelete(event, this));
         workspace.onDidSaveTextDocument((event) => onDidSaveTextDocument(event, this));
 
         // set instance map
