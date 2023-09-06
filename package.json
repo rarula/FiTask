@@ -2,7 +2,7 @@
     "name": "fi-task",
     "displayName": "FiTask",
     "description": "VSCode extension for linking and managing files and tasks.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "icon": "icon.png",
     "license": "MIT",
     "publisher": "rarula",
