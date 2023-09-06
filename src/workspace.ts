@@ -8,7 +8,7 @@ import { onDidFileRename } from './listeners/fileRenameEvent';
 import { onDidSaveTextDocument } from './listeners/textDocumentSaveEvent';
 import { Configuration, TaskDetails, TaskMap } from './types/Configuration';
 
-const CONFIG_FILE_NAME = 'fitask.config.json';
+const CONFIG_FILE_NAME = 'fitask.meta.json';
 
 const DEFAULT_CONFIG: Configuration = {
     taskIndex: 1,

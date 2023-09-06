@@ -59,7 +59,7 @@
     },
     "main": "./dist/extension.js",
     "activationEvents": [
-        "workspaceContains:fitask.config.json"
+        "workspaceContains:fitask.meta.json"
     ],
     "contributes": {
         "commands": [
