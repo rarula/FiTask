@@ -4,6 +4,7 @@ English | [日本語](README_ja.md)
 
 VSCode extension for linking and managing files and tasks.
 
+- [Installation](#installation)
 - [Features](#features)
   - [Assign tasks to files](#assign-tasks-to-files)
   - [Customizable task templates](#customizable-task-templates)
@@ -11,6 +12,9 @@ VSCode extension for linking and managing files and tasks.
 - [Support and Feedback](#support-and-feedback)
 - [Special Thanks](#special-thanks)
 - [License](#license)
+
+## Installation
+FiTask can be installed from the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=rarula.fi-task).
 
 ## Features
 
