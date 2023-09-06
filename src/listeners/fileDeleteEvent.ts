@@ -17,7 +17,7 @@ export function onDidFileDelete(event: FileDeleteEvent, workspaceInstance: Works
         let modified = false;
 
         event.files.forEach((uri) => {
-            const relativePath = workspace.asRelativePath(uri);
+            const relativePath = workspace.asRelativePath(uri, false);
 
             for (const key in taskMap) {
                 const object = taskMap[key];
